@@ -25,23 +25,13 @@ libraryDependencies += "org.json" % "json" % "20140107"
 // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on
 libraryDependencies += "org.bouncycastle" % "bcprov-jdk15on" % "1.61"
 
-// https://mvnrepository.com/artifact/org.ow2.asm/asm
-//libraryDependencies += "org.ow2.asm" % "asm" % "5.1"
 // https://mvnrepository.com/artifact/org.ow2.asm/asm-all
 libraryDependencies += "org.ow2.asm" % "asm-all" % "5.2"
 
-// https://mvnrepository.com/artifact/asm/asm
-// libraryDependencies += "asm" % "asm" % "3.3.1"
-// https://mvnrepository.com/artifact/org.ow2.asm/asm
-//libraryDependencies += "org.ow2.asm" % "asm" % "7.1"
-//
-//// https://mvnrepository.com/artifact/org.ow2.asm/asm-tree
-////libraryDependencies += "org.ow2.asm" % "asm-tree" % "5.0.3"
-//
-//// https://mvnrepository.com/artifact/org.ow2.asm/asm-tree
-//libraryDependencies += "org.ow2.asm" % "asm-tree" % "7.1"
-//
-//// https://mvnrepository.com/artifact/org.ow2.asm/asm-util
-//libraryDependencies += "org.ow2.asm" % "asm-util" % "7.1"
-//
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
+
+// https://mvnrepository.com/artifact/com.google.jimfs/jimfs
+libraryDependencies += "com.google.jimfs" % "jimfs" % "1.1"
+
+// https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload
+libraryDependencies += "commons-fileupload" % "commons-fileupload" % "1.4"
