@@ -17,7 +17,7 @@ import org.sh.reflect.DefaultTypeHandler
 @deprecated object FileStore extends TraitFilePropertyReader {
   val propertyFile = "fileStore.properties"
   
-  val uploadDir = read("uploadDir", ".")+"/mux_reflect_uploads"
+  val uploadDir = read("uploadDir", ".")+"/org.sh.reflect_uploads"
   val maxSizeBytes = read("maxSizeBytes", 10000000) // 10 MB
   val maxRetainTime = read("maxRetainTimeHours", 24L) * OneHour
   val isNioMode = read("isNioMode", true)
