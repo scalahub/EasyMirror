@@ -226,6 +226,7 @@ class TypeHandler {
           //            case Failure(ex) =>
           //          }
         case a: Array[_] => encodeJSONArray(a.map(_.toString)).toString
+        case o:org.json.JSONObject => o.toString
           //////////////////////////////////////////////////////////
           //////////////////////////////////////////////////////////
           //////////////////////////////////////////////////////////
@@ -240,7 +241,7 @@ class TypeHandler {
         case null => "null"
         case anyRef:JsonFormatted => anyRef.toString
         case anyRef:AnyRef => 
-          //println("-----------> "+anyRef+" --------> "+anyRef.getClass)
+          println(s" [Reflect:TypeToString] Error for [${anyRef.getClass}] with data: "+anyRef.toString.take(100)+"\n[end data]")
           serialize(anyRef)
         case any => 
           //print(" typeToString: => "+any)
