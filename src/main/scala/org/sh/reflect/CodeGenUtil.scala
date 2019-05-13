@@ -17,15 +17,12 @@ object CodeGenUtil {
       )      
     )
 
-  //  not used anywhere??
-  //////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////
+  //  is below used anywhere?
   //////////////////////////////////////////////////////////
   def filterReturnTypes(methods:List[(ScalaMethod, Class[_])]) = methods filter  (x => exactClassMatch(x._2))
   //  def filterReturnTypes(methods:List[(ScalaMethod, Class[_])]) = methods filter  (x => exactMatch(x._2.getCanonicalName))
   //////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////
+
   def validateReturnTypes(methods:List[(ScalaMethod, Class[_])]) =
     methods foreach(x => {
         if (!exactClassMatch(x._2)){
@@ -44,14 +41,10 @@ object CodeGenUtil {
   //    )      
   // added following to match using type handler rather than strings (11/Dec/2015)
   //////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////
   def exactClassMatch(st:Class[_]) = DefaultTypeHandler.getHandledTypes.find(_ == st) match {
     case Some(_) => true
     case _ => false
   }
-  //////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////
 
   def subst(st:String) = javaTypes.foldLeft(st)((x, y) => x.replace(y._1, y._2))
@@ -63,7 +56,7 @@ object CodeGenUtil {
   val javaTypes = List(("java.lang.String[]", "Array[String]"), // DO NOT USE MAP. Map does not maintain ordering. Here ordering is important!!
                        ("java.lang.String", "String"), 
                        ("String[]", "Array[String]"),
-//                       ("void", "Unit"),
+                       // ("void", "Unit"),
                        ("double[]", "Array[Double]"),
                        ("boolean[]", "Array[Boolean]"),
                        ("long[]", "Array[Long]"),
@@ -92,15 +85,3 @@ Stacktrace of the call is given below:
 }
 // {var st = "\n"; try {(4 to 20).foreach(x => st = st+ "\n"+sun.reflect.Reflection.getCallerClass(x).getName()); st } catch { case any:Throwable => st }; st }
 
-
-
-
-
-
-
-
-
-
-    //////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////////

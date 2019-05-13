@@ -36,6 +36,8 @@ object Util extends TraitFilePropertyReader {
    * extracts the names, parameter names and parameter types of all methods of declaringClass that start with startString
    * stackoverflow.com/questions/7640617/how-to-get-parameter-names-and-types-via-reflection-in-scala-java-methods
    */
+  case class MethodVar(name:String, desc:String) // used internally
+
   def getMethods(c:AnyRef, is:java.io.InputStream) = {
     val cn = new ClassNode();
     val cr = new ClassReader(is);
@@ -45,23 +47,31 @@ object Util extends TraitFilePropertyReader {
     val methods = cn.methods.asInstanceOf[java.util.List[MethodNode]];
     var mList:List[ScalaMethod] = Nil
     if (methods.size > 0) for (i <- 1 to methods.size) {
+      val m:MethodNode = methods.get(i-1)
       try {
-        val m:MethodNode = methods.get(i-1)
-        
         val argTypes:Array[Type] = Type.getArgumentTypes(m.desc);
         val vars = m.localVariables.asInstanceOf[java.util.List[LocalVariableNode]];
-        var paramList:List[Param] = Nil
-        if (argTypes.length > 0 && vars.length > 0) for (i <- 1 to argTypes.length) {
-          // The first local variable actually represents the "this" object in some cases
-          val difference = if (vars.get(0).name == "this") 0 else 1
-          paramList = Param(vars.get(i-difference).name, argTypes(i-1)) :: paramList
-        }
 
-        
-        /////////////////////////////////////////////////////////////////////////////////        
+        var paramList:List[Param] = Nil
+        if (argTypes.length > 0 && vars.length > 0) {
+          val methodVars:Map[Int, MethodVar] = vars.map{ v =>
+            v.index -> MethodVar(v.name, v.desc)
+          }.toMap
+          for (i <- 1 to argTypes.length) {
+            val param = Param(methodVars.get(i).map(_.name).getOrElse(""), argTypes(i-1))
+            paramList = param :: paramList
+          }
+        }
         // refer http://stackoverflow.com/a/19173813/243233
         // http://stackoverflow.com/questions/31367070/how-to-read-a-final-string-value-in-asm/31367264#31367264
-        val infoVars = vars.find(_.name == "$info$").find(info => Type.getType(info.desc) == Type.getType(classOf[String])) // var names "$info$" gives info about method
+        val infoVars:Option[LocalVariableNode] =
+          vars.find(_.name == "$info$").find(
+            info => Type.getType(info.desc) == Type.getType(classOf[String])
+          )
+
+        // val with name "$info$" and type String gives info about method
+        infoVars.foreach(i => println(s"[INFOVAR] ${i.name}, ${i.desc}"))
+        // group seems to be unused
         val groupVars = vars.find(_.name == "$group$").find(groupDesc => Type.getType(groupDesc.desc) == Type.getType(classOf[String])) // var names "$group$" gives info about which group method belongs
 
         val allVars = vars.filter(x => x.name.startsWith("$") && x.name.endsWith("$")).filter{v =>
@@ -80,16 +90,28 @@ object Util extends TraitFilePropertyReader {
         def getStr(optVarNode:Option[LocalVariableNode]) = {
           optVarNode.map {varNode => 
            try {
-             val text = insnToString(varNode.start.getPrevious.getPrevious).trim
-             if (text.startsWith("LDC")) text.substring(5).init else "no info"
+             val textNode = varNode.start.getPrevious
+             /* other combinations to try:
+               varNode.start
+               varNode.start.getPrevious // this one works currently (Java 8/Scala 2.12)
+               varNode.start.getPrevious.getPrevious // this one worked previously (Java 7/Scala 2.11) but no longer
+               varNode.start.getPrevious.getPrevious.getPrevious
+               varNode.end
+              */
+             //val text = insnToString(varNode.start.getPrevious.getPrevious).trim // earlier Java/Scala version
+             val text = insnToString(textNode).trim
+             if (text.startsWith("LDC")) text.substring(5).init else "none"
            } catch {
-             case e:Throwable => "error retrieving info"
+             case e:Throwable =>
+               println(" [Reflect] Error retrieving info")
+               e.printStackTrace()
+               "Error retrieving info"
            }
          }          
         }
         val infoStr = getStr(infoVars)
         val groupStr = getStr(groupVars)
-        
+
         val allStr = allVars.map(allVar => allVar.name -> getStr(Some(allVar))).collect{
           case (name, Some(value)) => name -> value
         }.toMap
@@ -105,13 +127,9 @@ object Util extends TraitFilePropertyReader {
         )
         mList = sm :: mList
       } catch { 
-        case e:Throwable => 
-          println (" [ERROR] "+e.getMessage)
-          if (debug) {
-            val m = methods.get(i-1)
-            println (" [info] body not found for method: ["+m.name+"] in class: "+cn.name)
-            //e.printStackTrace
-          }
+        case e:Throwable =>
+          println (s" [ERROR] Method [${m.name}]. Error message: "+e.getMessage)
+          e.printStackTrace()
         }
     }
     mList.reverse
@@ -134,7 +152,7 @@ object Util extends TraitFilePropertyReader {
       else is
     } catch {
       case e:IllegalArgumentException => 
-        println (" [ERROR] "+Thread.currentThread().getContextClassLoader().getResource(url))
+        println (" [IllegalArgumentException] "+Thread.currentThread().getContextClassLoader().getResource(url))
         new java.io.FileInputStream(url)
     }
     val thisClassMethods = getMethods(c, is)

@@ -70,7 +70,11 @@ object ProxyTest extends App{
 case class D(s:String, i:Int)
 
 object MyObject {
-  def __test__F1(a:Int):Boolean = true
+  def __test__F1(a:Int):Boolean = {
+    val $info$ = "32r23"
+    val foo = "123"
+    true
+  }
   def __test__F2(a:String):String = "F2_response"
   def __test__F3(a:Array[Int]):Array[String] = a.map(_.toString).reverse
   def __test__F4(a:String, b:String, c:Array[String], d:D):Array[(Boolean, Int)] = Array((true, 1))
@@ -78,7 +82,16 @@ object MyObject {
   def __test__F6(a:D, b:D, c:D, s:String):D = D(a.s+b.s+c.s, a.i+b.i+c.i)
   def __test__F7(a:Int):String = "true"
   def __test__F8(a:Int, b:String):Int = 1
-  def test_F9(a:Int, b:Int) = a + b // won't be available 
+  def test_F9(a:Int, b:Int) = a + b
+  def test_F0(a:Int, b:Int) = {
+    val x = "randomX"
+    val $info$ = "method info"
+    val $a$ = "a info"
+    val $b$ = "b info"
+    val $c$ = 123
+    val y = "randomY"
+    a + b
+  } // won't be available
 }
 
 class MyClass {

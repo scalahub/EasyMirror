@@ -11,7 +11,8 @@ object DataStructures {
     def ==(p:Param) = {
       paraName == p.paraName && paraType.equals(p.paraType)
     }
-    override def toString = ""
+    // override def toString = ""
+    override def toString = s"$paraName:$paraType"
     var info:Option[String] = None
   }
   case class ScalaMethod(
@@ -19,9 +20,6 @@ object DataStructures {
     methodInfo:Option[String]=None, groupInfo:Option[String]=None, 
     infoVars:Map[String, String]
   ) extends JsonFormatted {
-//      println("//////start/////////// :"+name+"; params:size "+params.size)
-//      params foreach (p => println("paraName: "+p.paraName+"; paraType: "+p.paraType))
-//      println("\\\\\\end\\\\\\\\\\\n")
 
     def getModifiedMethod(newDisplayName:String, newParentClassName:String) = {
       ScalaMethod(newDisplayName, returnType, params, newParentClassName, origName, methodInfo, groupInfo, infoVars)
@@ -34,8 +32,7 @@ object DataStructures {
     def toScalaString:String = "def "+toScalaSignatureString+": "+cleanClassName(returnType.getClassName)
     def toScalaParamString = {
       val p = params.map(x=> x.paraName+":"+cleanClassName(x.paraType.getClassName))
-//      (if (p.size > 0) "("+p.tail.foldLeft(p.head)( (x, y) => x+", "+y )+")" else "")
-      (if (p.size > 0) "("+p.reduceLeft(_+", "+_)+")" else "") 
+      (if (p.size > 0) "("+p.reduceLeft(_+", "+_)+")" else "")
     }
     def toScalaSignatureString = name + toScalaParamString
 

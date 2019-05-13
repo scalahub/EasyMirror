@@ -15,7 +15,7 @@ object FormProcessorTest extends App {
 }
 
 object RunMethodSpyJava {
-  def main(arg:Array[String]) = MethodSpy.main("org.sh.reflect.test.MethodSpy", "m1")
+  def mainOld(arg:Array[String]) = MethodSpy.main("org.sh.reflect.test.MethodSpy", "m1")
 }
 
 

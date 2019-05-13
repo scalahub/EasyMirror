@@ -9,6 +9,7 @@ import org.sh.reflect.DefaultTypeHandler
 import HTMLConstants._
 import org.sh.reflect.web.server.FileStore
 import org.sh.reflect.web.server.FileStoreNIO
+import org.sh.utils.common.file.{Util => FUtil}
 
 class HTMLClientCodeGenerator(initRefs: List[AnyRef], postUrl:String, appInfo:String, optIsl:Option[List[InputStream]], allowOnlyKnownTypes:Boolean, hideUnknownTypes:Boolean) {
   FileStore // just access file-store to ensure type handlers for java.io.File are added
@@ -35,7 +36,8 @@ class HTMLClientCodeGenerator(initRefs: List[AnyRef], postUrl:String, appInfo:St
     // assert(prefix != "", "prefix cannot be empty.") // actually empty prefix is not a problem here, unlike in ServerCodeGenerator
     val fullFileName = fileName+"AutoGen"+".html"
     val file = dir+"/"+fullFileName
-    println("Writing to file: "+file)
+    println(s"[reflect] prefix = $prefix")
+    println("Writing HTML file: "+file)
     org.sh.utils.common.file.Util.writeToTextFile(file, generateFilteredOut(prefix, ignoreMethods))
     fullFileName
   } 
@@ -45,11 +47,11 @@ class HTMLClientCodeGenerator(initRefs: List[AnyRef], postUrl:String, appInfo:St
     // assert(prefix != "", "prefix cannot be empty.") // actually empty prefix is not a problem here, unlike in ServerCodeGenerator
     val fullFileName = fileName+"AutoGen"+".html"
     val file = dir+"/"+fullFileName
-    println("Writing to file: "+file)
-    org.sh.utils.common.file.Util.writeToTextFile(file, generateFilteredIn(prefix, filter))
+    println("Creating HTML file: "+file)
+    FUtil.writeToTextFile(file, generateFilteredIn(prefix, filter))
     fullFileName
   } 
-//  def cleanClassName(s:String) = s.replace("$", "")
+  //  def cleanClassName(s:String) = s.replace("$", "")
 
   def getFormDetails(prefix:String) = {
     val lOptIs = if (optIsl.isDefined) optIsl.get.map(x => Some(x)) else c.map(x => None)
@@ -57,18 +59,13 @@ class HTMLClientCodeGenerator(initRefs: List[AnyRef], postUrl:String, appInfo:St
     // following for validation of params and return types
     val allMethods = fps.flatMap(x => getFormMethods(x._1))
     if (allowOnlyKnownTypes) validateReturnTypes(allMethods)
-    //    println( " ===> ALL ")
-    //    allMethods.foreach(m => println(m._1.toScalaString))
-    //    println( " ===> ALL END")
     def getShownFormMethods(fp:FormProcessor) = if (hideUnknownTypes) filterReturnTypes(getFormMethods(fp)) else getFormMethods(fp)
     val methodsInfoNew = fps.map{case (fp, c) => (getShownFormMethods(fp).map{ case (m, _) => (m, c) }, fp.getClassName)}
-//    val methodsInfoNew = fps.map{case (fp, c) => (getShownFormMethods(fp).map{ case (m, _) => (m, c) }, cleanClassName(c.getClass.getCanonicalName))}
     methodsInfoNew
   }
   def generate(prefix:String):String = generate(getFormDetails(prefix))
   
   def generateFilteredIn(prefix:String, includeOnly:List[(String, String)])(implicit ignoreMethods:List[(String, String)] = Nil):String = 
-//    generate(filterMainMethodsInclude(getFormDetails(prefix), includeOnly))
     generate(filterMainMethodsInclude(filterMainMethodsExclude(getFormDetails(prefix), ignoreMethods), includeOnly))
   
   def generateFilteredOut(prefix:String, ignoreMethods:List[(String, String)]):String = 
@@ -108,8 +105,9 @@ class HTMLClientCodeGenerator(initRefs: List[AnyRef], postUrl:String, appInfo:St
       case (methodList, clsName) if methodList.size > 0 => (methodList, clsName) 
     }
   }
-  def generate(mainMethods:List[(List[(ScalaMethod, AnyRef)], String)]):String = // last param is class name
-    getPage(mainMethods, appInfo, postUrl, this, pageTitle) 
+  def generate(mainMethods:List[(List[(ScalaMethod, AnyRef)], String)]):String = { // last param is class name
+    getPage(mainMethods, appInfo, postUrl, this, pageTitle)
+  }
 }
 
 
