@@ -70,7 +70,6 @@ object Util extends TraitFilePropertyReader {
           )
 
         // val with name "$INFO$" and type String gives info about method
-        infoVars.foreach(i => println(s"[INFOVAR] ${i.name}, ${i.desc}"))
         // group seems to be unused
         val groupVars = vars.find(_.name == "$group$").find(groupDesc => Type.getType(groupDesc.desc) == Type.getType(classOf[String])) // var names "$group$" gives info about which group method belongs
 
