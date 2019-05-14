@@ -119,7 +119,7 @@ object WebQueryResponder extends QueryResponder {
           //    // println("This will cause NoClassDefFoundError in further calls to this class")
           //    "Error: "+e.getCause.getMessage
           case e:Throwable => 
-            //if (debug) e.printStackTrace            
+            //if (debug) e.printStackTrace
             "Error: "+e.getMessage
         }
         // if (debug) println("Response is: "+resp)

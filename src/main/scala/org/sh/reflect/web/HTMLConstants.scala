@@ -134,7 +134,7 @@ s"""
 //   <label>"""
         
       case "org.sh.reflect.web.Text" =>
-        val default = if (x.paraName != "info") x.info.getOrElse("").replace("\\n", "\n").replace("\\\\", "\\") else ""
+        val default = if (x.paraName != "INFO") x.info.getOrElse("").replace("\\n", "\n").replace("\\\\", "\\") else ""
         """    <textarea id=""""+formID+"_"+x.paraName+"""" name=""""+x.paraName+s"""">$default</textarea><br>"""
 //      case "scala.Option" =>
 //        println(" ||||| ===> "+x.paraType.get)
@@ -145,9 +145,9 @@ s"""
 //        println(" ||||| ===> "+x.paraType.getArgumentsAndReturnSizes)
 //        s"""    <input id=""""+formID+"_"+x.paraName+"""" type="text" name=""""+x.paraName+s"""" $additionalText/><br>"""                
       case other =>
-        val value = if (x.paraName != "info") x.info.getOrElse("") else ""
-        // $info$ is a special variable inside a function, 
-        // but the "infoVar" of a parameter called "info" will also be called $info$.
+        val value = if (x.paraName != "INFO") x.info.getOrElse("") else ""
+        // $INFO$ is a special variable inside a function,
+        // but the "infoVar" of a parameter called "INFO" will also be called $INFO$.
         // Hence we ignore such parameters
         // 
         s"""    <input id=""""+formID+"_"+x.paraName+s"""" value="$value" type="text" name=""""+x.paraName+s"""" $additionalText/><br>"""        

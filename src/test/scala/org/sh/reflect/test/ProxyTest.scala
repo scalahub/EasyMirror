@@ -71,7 +71,7 @@ case class D(s:String, i:Int)
 
 object MyObject {
   def __test__F1(a:Int):Boolean = {
-    val $info$ = "32r23"
+    val $INFO$ = "32r23"
     val foo = "123"
     true
   }
@@ -85,7 +85,7 @@ object MyObject {
   def test_F9(a:Int, b:Int) = a + b
   def test_F0(a:Int, b:Int) = {
     val x = "randomX"
-    val $info$ = "method info"
+    val $INFO$ = "method info"
     val $a$ = "a info"
     val $b$ = "b info"
     val $c$ = 123

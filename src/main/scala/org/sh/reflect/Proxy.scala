@@ -84,7 +84,8 @@ object Proxy {
         catch { 
           case e:Any => 
             println(s" [PROXY:ERROR] pid:$pid, formName:$formName, reqData:$reqDataJSON")
-            if (debug) e.printStackTrace 
+            //if (debug)
+            e.printStackTrace
             throw ProxyException(getExceptionStack(e))
         }
       }

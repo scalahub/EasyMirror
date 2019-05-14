@@ -65,11 +65,11 @@ object Util extends TraitFilePropertyReader {
         // refer http://stackoverflow.com/a/19173813/243233
         // http://stackoverflow.com/questions/31367070/how-to-read-a-final-string-value-in-asm/31367264#31367264
         val infoVars:Option[LocalVariableNode] =
-          vars.find(_.name == "$info$").find(
+          vars.find(_.name == "$INFO$").find(
             info => Type.getType(info.desc) == Type.getType(classOf[String])
           )
 
-        // val with name "$info$" and type String gives info about method
+        // val with name "$INFO$" and type String gives info about method
         infoVars.foreach(i => println(s"[INFOVAR] ${i.name}, ${i.desc}"))
         // group seems to be unused
         val groupVars = vars.find(_.name == "$group$").find(groupDesc => Type.getType(groupDesc.desc) == Type.getType(classOf[String])) // var names "$group$" gives info about which group method belongs
