@@ -1,13 +1,13 @@
-name := "CommonReflect"
+name := "EasyMirror"
 
 version := "0.1"
 
 scalaVersion := "2.12.8"
 
-lazy val CommonUtil = RootProject(uri("https://github.com/scalahub/CommonUtil.git"))
-// lazy val CommonUtil = RootProject(uri("../CommonUtil"))
+lazy val ScalaUtils = RootProject(uri("https://github.com/scalahub/ScalaUtils.git"))
+// lazy val ScalaUtils = RootProject(uri("../ScalaUtils"))
 
-lazy val root = project in file(".") dependsOn CommonUtil
+lazy val root = project in file(".") dependsOn ScalaUtils
 
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.5.8"
 
