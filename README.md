@@ -10,10 +10,7 @@ At a high level, it reads the bytecode of a class with the given name and does t
 It takes the class name, method name and the named parameters and invokes the given method in the class. It then outputs the value returned by the method
 
 ### Code Generator 
-This contains utilities for auto-generating code in various languages. Currently, HTML and Scala are supported out of the box. The following type of code is generated. It uses Form processor internally.
-
-- It generates the HTML code for invoking the methods in each class via the Proxy module.
-- It generates the Scala client and server code for invoking the methods over a network.
+This contains utilities for auto-generating code in various languages. It uses Form processor internally.
 
 # Usage
 Some examples of usage are given in the [test](https://github.com/scalahub/EasyMirror/blob/master/src/test/scala/org/sh/reflect/test "test") folder.
