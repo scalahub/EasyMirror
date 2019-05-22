@@ -15,7 +15,6 @@ import org.objectweb.asm.tree.MethodNode
 import org.sh.utils.common.encoding.Base64
 import org.sh.utils.common.file._
 
-//object Util extends TraitPlaintextFileProperties {
 object Util extends TraitFilePropertyReader {
   val propertyFile = "reflect.properties"
   var debug = read("debug", false)

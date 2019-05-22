@@ -1,4 +1,4 @@
-package org.sh.reflect.test;
+package org.sh.reflect;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;

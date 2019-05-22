@@ -1,5 +1,5 @@
 
-package org.sh.reflect.test
+package org.sh.reflect
 
 object JSONArrayTest {
   val ar = Array("hello", "world")

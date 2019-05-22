@@ -1,5 +1,5 @@
 
-package org.sh.reflect.test
+package org.sh.reflect
 
 import org.sh.reflect.Proxy
 import org.sh.reflect.Proxy._

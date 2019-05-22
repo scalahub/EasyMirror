@@ -1,4 +1,4 @@
-package org.sh.reflect.test
+package org.sh.reflect
 
 import org.objectweb.asm._;
 import org.objectweb.asm.commons.GeneratorAdapter;
