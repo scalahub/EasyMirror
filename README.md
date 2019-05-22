@@ -34,4 +34,4 @@ Proxy.addProcessor("myObjectID", "my", MyObject, DefaultTypeHandler, processSupe
 // use the id "myObjectID" to refer to the object when using Proxy
 
 // invoke the methods using the Proxy
-Proxy.getResponse("myObjectID", "myMethod", "{'a':1,'b':'hello',c:}")```
+Proxy.getResponse("myObjectID", "myMethod", "{'a':1,'b':'hello',c:}")
