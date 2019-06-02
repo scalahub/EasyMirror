@@ -10,7 +10,7 @@ object JSONArrayTest {
 }
 
 object FormProcessorTest extends App {
-  val m = org.sh.reflect.Util.getMethods(org.sh.reflect.test.MyObject, true)
+  val m = org.sh.reflect.Util.getMethods(MyObject, true)
   m.foreach(x => org.sh.reflect.Util.printMethod(x))
 }
 

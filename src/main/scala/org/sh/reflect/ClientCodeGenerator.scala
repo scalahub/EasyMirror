@@ -12,7 +12,7 @@ import org.sh.reflect.CodeGenUtil._
  * 
  * The idea of a proxy is as follows:
  * 
- * [Java class (A)] <---> [Proxy (P)] <---- <network, etc via QueryMaker> ---->  [Client (C)]
+ * [Java class (A)] <---> [EasyProxy (P)] <---- <network, etc via QueryMaker> ---->  [Client (C)]
  * 
  * The tool takes in the Java class A and allows a client to communicate via the proxy P to make queries to A
  * 
@@ -49,7 +49,7 @@ class ClientCodeGenerator(cqm: QueryMaker) {
     def methodBody(methods:List[(ScalaMethod, Class[_])], pid:String) =
       methods.foldLeft("  ")((x, y)=> x + "\n  "+substNew(y._1.toScalaString) + " = {\n"+ body(y._1) + end+ extr(ret(y._1, y._2, pid), y._2) + "  }  ")
     
-    val methodsString = methodBody(mainMethods, processorID)+methodBody(metaMethods, Proxy.metaPid(processorID))
+    val methodsString = methodBody(mainMethods, processorID)+methodBody(metaMethods, EasyProxy.metaPid(processorID))
     preString+"class "+className+"(qm: "+cqm.getClass.getSimpleName+") {\n"+ initString+"\n"+methodsString +"\n}"
   }
   def getNewTypes(methods:List[(ScalaMethod, Class[_])]) =

@@ -250,8 +250,8 @@ class TypeHandler {
     case any => any.get._3(a)
   }
 
-  // following to use for Java-client <--http--> Proxy Server communication
-  // for browser <--http--> Proxy Server communuication, use typeToString
+  // following to use for Java-client <--http--> EasyProxy Server communication
+  // for browser <--http--> EasyProxy Server communuication, use typeToString
   // 
   def typeToStringJavaNoWeb(objectType:Class[_], a:Any):String = handledTypes.find(_._1 == objectType) match {
     case None => // throw new Exception("output: Could not get handler for "+objectType.getCanonicalName)

@@ -5,7 +5,7 @@ import Util._
 import java.lang.reflect.InvocationTargetException
 import scala.collection.mutable.{Set => MSet}
 
-object Proxy {
+object EasyProxy {
   val deny = MSet[String]() // prevent these methods
   def preventMethod(m:String) = {
     deny += getRegEx(m)

@@ -9,7 +9,7 @@ import org.sh.reflect.DataStructures._
  * 
  * The idea of a proxy is as follows:
  * 
- * [Java classes (A1, A2, ...)] <---> [Proxy (P)] <---- <network, etc via QueryMaker> ---->  [Client (C)]
+ * [Java classes (A1, A2, ...)] <---> [EasyProxy (P)] <---- <network, etc via QueryMaker> ---->  [Client (C)]
  * 
  * The tool takes in the Java classes A1, A2, ... and allows a client to communicate via the proxy P to make queries to them
  * 
@@ -20,7 +20,7 @@ import org.sh.reflect.DataStructures._
  *   
  *   After this, the generated class A can be used as follows:
  *   
- * [Java class (A)] <---> [Proxy (P)] <---- <network, etc via QueryMaker> ---->  [Client (C)]
+ * [Java class (A)] <---> [EasyProxy (P)] <---- <network, etc via QueryMaker> ---->  [Client (C)]
  * 
  * where A wraps the functionality of A1, A2, ...
  * 

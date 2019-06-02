@@ -18,7 +18,7 @@ import org.sh.utils.common.file._
 object Util extends TraitFilePropertyReader {
   val propertyFile = "reflect.properties"
   var debug = read("debug", false)
-  val defaultPrefix = "_" // Methods starting with this will be considered in the Proxy
+  val defaultPrefix = "_" // Methods starting with this will be considered in the EasyProxy
   val defaultMetaPrefix = "____" // Meta methods start with this. Meta methods are methods about methods (i.e., giving info about other methods)
   def getDefaultPid(cls:AnyRef) = {
     // Important. We can only handle ONE instance of a class at a time.

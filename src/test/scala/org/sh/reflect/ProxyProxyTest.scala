@@ -5,10 +5,10 @@ import org.sh.reflect._
 
 object ProxyProxyServer {
   val pid = "ProxyProxy"
-  Proxy.addProcessor(pid, "__", this, DefaultTypeHandler, true)
+  EasyProxy.addProcessor(pid, "__", this, DefaultTypeHandler, true)
 
   def __getResponse(pid:String, reqName:String, reqData:String) = 
-    Proxy.getResponse(pid, reqName, reqData)
+    EasyProxy.getResponse(pid, reqName, reqData)
   def getProxyReqJSON(pid:String, reqName:String, reqData:String) = 
     JSONUtil.createJSONString(Array("pid", "reqName", "reqData"),Array(pid, reqName, reqData))
 }
@@ -31,17 +31,17 @@ class ProxyQueryMaker(qm:QueryMaker) extends QueryMaker{
 object TestProxyProxyServer extends App {
   println("testing server: "+ProxyProxyServer.pid)
 // do we need to test the below line?
-  Proxy.addProcessor(DummyTestServer.pid, "a_", DummyTestServer, DefaultTypeHandler, false)
+  EasyProxy.addProcessor(DummyTestServer.pid, "a_", DummyTestServer, DefaultTypeHandler, false)
   
-  println ("1s => "+Proxy.getResponse(Proxy.metaPid(ProxyProxyServer.pid), "getMethodsInJava", ""))
-  println ("2s => "+Proxy.getResponse(Proxy.metaPid(DummyTestServer.pid), "getMethodsInScala", ""))
-  println ("3s => "+Proxy.getResponse(Proxy.metaPid(ProxyProxyServer.pid), "getMethodInScala", "{'name':'getResponse'}"))
-  println ("4s => "+Proxy.getResponse(Proxy.metaPid(DummyTestServer.pid), "getMethodsInJava", ""))
-  println ("5s => "+Proxy.getResponse(DummyTestServer.pid, "foo", "{'s':'hello', 'i':3}"))  
-  println ("6s => "+Proxy.getResponse(ProxyProxyServer.pid, "getResponse",
+  println ("1s => "+EasyProxy.getResponse(EasyProxy.metaPid(ProxyProxyServer.pid), "getMethodsInJava", ""))
+  println ("2s => "+EasyProxy.getResponse(EasyProxy.metaPid(DummyTestServer.pid), "getMethodsInScala", ""))
+  println ("3s => "+EasyProxy.getResponse(EasyProxy.metaPid(ProxyProxyServer.pid), "getMethodInScala", "{'name':'getResponse'}"))
+  println ("4s => "+EasyProxy.getResponse(EasyProxy.metaPid(DummyTestServer.pid), "getMethodsInJava", ""))
+  println ("5s => "+EasyProxy.getResponse(DummyTestServer.pid, "foo", "{'s':'hello', 'i':3}"))
+  println ("6s => "+EasyProxy.getResponse(ProxyProxyServer.pid, "getResponse",
                                      "{'pid':'"+DummyTestServer.pid+
                                      "','reqName':'foo','reqData':'{\\'s\\':\\'hello\\', \\'i\\':3}'}"))
-  println ("7 => "+Proxy.getResponse(ProxyProxyServer.pid, "getResponse",
+  println ("7 => "+EasyProxy.getResponse(ProxyProxyServer.pid, "getResponse",
                                      ProxyProxyServer.getProxyReqJSON(DummyTestServer.pid, "foo", "{'s':'hello', 'i':3}")))
   System.exit(0)
 }
@@ -49,10 +49,10 @@ object TestProxyProxyServer extends App {
 
 class ProxyQueryMakerTest(qm:QueryMaker) {
   val pqm = new ProxyQueryMaker(qm)
-  println ("1q => "+pqm.makeQuery(Proxy.metaPid(ProxyProxyServer.pid), "getMethodsInJava", ""))
-  println ("2q => "+pqm.makeQuery(Proxy.metaPid(DummyTestServer.pid), "getMethodsInScala", ""))
-  println ("3q => "+pqm.makeQuery(Proxy.metaPid(ProxyProxyServer.pid), "getMethodInScala", "{'name':'getResponse'}"))
-  println ("4q => "+pqm.makeQuery(Proxy.metaPid(DummyTestServer.pid), "getMethodsInJava", ""))
+  println ("1q => "+pqm.makeQuery(EasyProxy.metaPid(ProxyProxyServer.pid), "getMethodsInJava", ""))
+  println ("2q => "+pqm.makeQuery(EasyProxy.metaPid(DummyTestServer.pid), "getMethodsInScala", ""))
+  println ("3q => "+pqm.makeQuery(EasyProxy.metaPid(ProxyProxyServer.pid), "getMethodInScala", "{'name':'getResponse'}"))
+  println ("4q => "+pqm.makeQuery(EasyProxy.metaPid(DummyTestServer.pid), "getMethodsInJava", ""))
   println ("5q => "+pqm.makeQuery(DummyTestServer.pid, "foo", "{'s':'hello', 'i':3}"))  
   println ("6q => "+pqm.makeQuery(ProxyProxyServer.pid, "getResponse",
                                  "{'pid':'"+DummyTestServer.pid+
