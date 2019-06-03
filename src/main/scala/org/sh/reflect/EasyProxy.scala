@@ -84,7 +84,6 @@ object EasyProxy {
         catch { 
           case e:Any => 
             println(s" [PROXY:ERROR] pid:$pid, formName:$formName, reqData:$reqDataJSON")
-            //if (debug)
             e.printStackTrace
             throw ProxyException(getExceptionStack(e))
         }
@@ -103,13 +102,12 @@ object EasyProxy {
         } catch { 
           case e:Throwable => 
             if (debug) e.printStackTrace
-            //throw e //ProxyException(getExceptionStack(e))
-            //throw ProxyException(getExceptionStack(e))
             throw ProxyException(e.getMessage)
         }
       }
     case _ => throw ProxyException("Processor with PID: "+pid+" not found.")
   }
 }
-case class ProxyException(m:String) extends Exception(m) 
+
+case class ProxyException(m:String) extends Exception(m)
 

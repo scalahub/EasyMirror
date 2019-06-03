@@ -8,6 +8,25 @@ import java.io._
 import org.sh.reflect.DataStructures._
 
 /**
+  * Firstly some background.
+  * We use the "Web" terminology, so that a method is equivalent to a "form", which has some input boxes
+  * (representing the inputs to the method) and a submit button (representing an invocation of the method).
+  * Finally a form returns something, representing the output of the method.
+  *
+  * This is designed with Scala in mind, but should work for Java classes as well.
+  *
+  * A FormProcessor takes in an instance of AnyRef. Note that this can represent either an instance of
+  * a class (created using the `new` keyword) or a singleton object (created using the `object` keyword).
+  *
+  * It scans all the methods of that object that start with some given string and then provides a
+  * "virtual form" for calling those methods via a an object called EasyProxy, which acts as a proxy
+  * between the user and the actual object to access.
+  *
+  * This allows a lot of customizations and allows for better object level access control.
+  *
+  * Note that each FormProcessor instance corresponds to a single AnyRef instance.
+  */
+/**
  * This is the main class for processing a form
  *
  * The class takes as input a startTag, a reference to an object, c, and a TypeHandler th
@@ -57,7 +76,7 @@ class FormProcessor(startTag:String, c:AnyRef, th:TypeHandler, optIs:Option[Inpu
     
     all.filter(_.name.startsWith(startTag)).filterNot(_.name.contains("$")).collect(x => // This lines filters out methods with names containing $
       getJavaMethod(c, x) match {
-        case Some(m) => (x, m)  
+        case Some(m) => (x, m)
       }
     ).groupBy(_._1.name).toList.flatMap(x =>  // for method with duplicate name, append index to method name
       x match {
@@ -95,6 +114,9 @@ class FormProcessor(startTag:String, c:AnyRef, th:TypeHandler, optIs:Option[Inpu
   }
   def getPublicMethodsTypes = availableMethods.map(x => (displayName(x._1), x._2.getReturnType, x._2.getParameterTypes))
 
+  // Following are "meta" methods. They return information about the current
+  // object loaded in this instance of FormProcessor.
+  // They return information about the methods available to invoke via the FormProcessor
   def ____getMethodsInJava:Array[String] = getPublicMethods.map(_.toJavaString).toArray
   def ____getMethodsInScala:Array[String] = getPublicMethods.map(_.toScalaString).toArray
   def ____getMethodInJava(name:String) = getPublicMethods.filter(_.name == name).map(_.toJavaString).toArray

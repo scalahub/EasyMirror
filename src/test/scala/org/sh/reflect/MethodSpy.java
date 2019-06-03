@@ -23,7 +23,6 @@ public class MethodSpy {
 		out.format("%s%n", m.toGenericString());
                 out.format(fmt, "ReturnType", m.getReturnType());
 		out.format(fmt, "ReturnType is Array?", m.getReturnType().isArray());
-//		out.format(fmt, "GenericReturnType", m.getGenericReturnType());
 
 		Class<?>[] pType  = m.getParameterTypes();
 		Type[] gpType = m.getGenericParameterTypes();
