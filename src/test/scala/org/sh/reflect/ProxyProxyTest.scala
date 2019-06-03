@@ -14,7 +14,7 @@ object ProxyProxyServer {
     JSONUtil.createJSONString(Array("pid", "reqName", "reqData"),Array(pid, reqName, reqData))
 }
 
-object DummyTestServer {
+object DummyObject {
   val pid = "dummyTest"
   def a_foo(s:String, i:Int) = s+i
   def a_bar(s:String, i:Long) = s+i
@@ -28,26 +28,26 @@ object TestVectors {
     TestVector(EasyProxy.metaPid(ProxyProxyServer.pid), "getMethodsInJava", "",
       """["String getResponse(String pid,String reqName,String reqData)"]"""
     ),
-    TestVector(EasyProxy.metaPid(DummyTestServer.pid), "getMethodsInScala", "",
+    TestVector(EasyProxy.metaPid(DummyObject.pid), "getMethodsInScala", "",
       """["def foo(s:String, i:int): String","def bar(s:String, i:long): String","def baz(s:String): String[]"]"""
     ),
     TestVector(EasyProxy.metaPid(ProxyProxyServer.pid), "getMethodInScala", "{'name':'getResponse'}",
       """["def getResponse(pid:String, reqName:String, reqData:String): String"]"""
     ),
-    TestVector(EasyProxy.metaPid(DummyTestServer.pid), "getMethodsInJava", "",
+    TestVector(EasyProxy.metaPid(DummyObject.pid), "getMethodsInJava", "",
       """["String foo(String s,int i)","String bar(String s,long i)","String[] baz(String s)"]"""
     ),
-    TestVector(DummyTestServer.pid, "foo", "{'s':'hello', 'i':'3'}", """hello3"""),
+    TestVector(DummyObject.pid, "foo", "{'s':'hello', 'i':'3'}", """hello3"""),
     TestVector(ProxyProxyServer.pid,"getResponse",
-      "{'pid':'"+DummyTestServer.pid+"','reqName':'foo','reqData':'{\\'s\\':\\'hello\\', \\'i\\':\\'3\\'}'}",
+      "{'pid':'"+DummyObject.pid+"','reqName':'foo','reqData':'{\\'s\\':\\'hello\\', \\'i\\':\\'3\\'}'}",
       """hello3"""
     ),
     TestVector(ProxyProxyServer.pid,"getResponse",
-      s"""{'pid':'${DummyTestServer.pid}','reqName':'foo','reqData':'{\\'s\\':\\'hello\\', \\'i\\':\\'3\\'}'}""",
+      s"""{'pid':'${DummyObject.pid}','reqName':'foo','reqData':'{\\'s\\':\\'hello\\', \\'i\\':\\'3\\'}'}""",
       """hello3"""
     ),
     TestVector(ProxyProxyServer.pid,"getResponse",
-      ProxyProxyServer.getProxyReqJSON(DummyTestServer.pid, "foo", "{'s':'hello', 'i':'3'}"),
+      ProxyProxyServer.getProxyReqJSON(DummyObject.pid, "foo", "{'s':'hello', 'i':'3'}"),
       """hello3"""
     ),
     TestVector("myObjectIDMeta", "getMethodsInScala","",
@@ -82,7 +82,7 @@ object TestProxyProxyServer extends App {
   // prints ["def otherMethod(myParam:String): void","def mainMethod(a:int, b:String): scala.math.BigInt"]
 
   // do we need to test the below line?
-  EasyProxy.addProcessor(DummyTestServer.pid, "a_", DummyTestServer, DefaultTypeHandler, false)
+  EasyProxy.addProcessor(DummyObject.pid, "a_", DummyObject, DefaultTypeHandler, false)
   testVectors.foreach{
     case TestVector(pid, reqName, reqData, expected) =>
       val actual = EasyProxy.getResponse(pid, reqName, reqData)
@@ -109,6 +109,6 @@ class ProxyQueryMakerTest(qm:QueryMaker) {
       val actual = pqm.makeQuery(pid, reqName, reqData)
       assert(actual == expected, s"Expected: $expected. Actual: $actual")
   }
-  println("Peoxy tests passed for pid: "+ProxyProxyServer.pid)
+  println("Proxy tests passed for pid: "+ProxyProxyServer.pid)
 }
 
