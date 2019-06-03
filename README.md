@@ -17,7 +17,7 @@ Some examples of usage are given in the [test](https://github.com/scalahub/EasyM
  
 The following code snippet explains usage of the library.
 
-To read the methods in a class (motivated from [ProxyTest.scala](https://github.com/scalahub/EasyMirror/blob/master/src/test/scala/org/sh/reflect/test/ProxyTest.scala "ProxyTest.scala")):
+To read the methods in a class (motivated from [ProxyTest.scala](https://github.com/scalahub/EasyMirror/blob/master/src/test/scala/org/sh/reflect/ProxyTest.scala "ProxyTest.scala")):
 
 ```scala
 object MyObject {
@@ -33,12 +33,16 @@ EasyProxy.addProcessor("myObjectID", "my_", MyObject, DefaultTypeHandler, proces
 
 // invoke the my_mainMethod using the Proxy, but skip the prefix ("my_") when calling
 println(EasyProxy.getResponse("myObjectID", "mainMethod", "{'a':'1','b':'hello'}"))
+// prints 1
 
 // following will also work because method name in original object starts with "my_"
 println(EasyProxy.getResponse("myObjectID", "otherMethod","{'myParam':'hello'}"))
+// prints Ok, the string returned for Unit 
 
 // get details for methods available for invocation; append "Meta" to object id to get meta object id.
 // meta object is the object that stores information about the main object
+
 println(EasyProxy.getResponse("myObjectIDMeta", "getMethodsInScala", ""))
-// prints ["def otherMethod(myParam:String): void","def mainMethod(a:int, b:String): scala.math.BigInt"]
+// prints:
+// ["def otherMethod(myParam:String): void","def mainMethod(a:int, b:String): scala.math.BigInt"]
 ```
