@@ -2,8 +2,10 @@
 package org.sh.reflect
 
 import java.util.ArrayList
+
 import org.sh.utils.common.json.JSONUtil
 import org.sh.utils.common.json.JSONUtil._
+
 import scala.collection.JavaConversions._
 import scala.concurrent.Await
 import scala.concurrent.Future
@@ -11,6 +13,7 @@ import scala.reflect.ClassTag
 import scala.reflect.runtime.universe._
 import scala.reflect._
 import org.sh.utils.common.Util._
+import org.sh.utils.common.encoding.Hex
 
 /**
  * TypeHandler is a class encapsulating methods for (de)serializing Scala/Java objects. That is methods for converting string to a Scala type and vice versa
@@ -84,7 +87,32 @@ class TypeHandler {
     addType[Array[Float]](classOf[Array[Float]], decodeJSONArray(_).map(_.toString.toFloat), encodeJSONArray(_).toString)
 
     // below added 03 June 2019
-    addType[Array[Boolean]](classOf[Array[Boolean]], decodeJSONArray(_).map(_.toString.toBoolean), encodeJSONArray(_).toString)
+    addType[Array[Boolean]](
+      classOf[Array[Boolean]],
+      decodeJSONArray(_).map(_.toString.toBoolean),
+      encodeJSONArray(_).toString
+    )
+
+    // below added 03 June 2019
+    def hexToBytes(str:String) = {
+      if (str.length % 2 == 1) throw new Exception(
+        s"Hex encoded string size is odd (${str.length}). $str"
+      )
+      Hex.decode(str)
+    }
+
+    addType[Array[Byte]](classOf[Array[Byte]], hexToBytes, Hex.encodeBytes)
+
+    addType[Array[Array[Byte]]](
+      classOf[Array[Array[Byte]]],
+      str => decodeJSONArray(str).map(_.toString).map(hexToBytes),
+      arrArrByte => {
+        val arrEncoded = arrArrByte.map{
+          arrByte => Hex.encodeBytes(arrByte)
+        }
+        encodeJSONArray(arrEncoded).toString
+      }
+    )
 
     /////////////////// Option //////////////////
     def addOptType[B](func1: String => Option[B])(implicit tag:ClassTag[B], typeTag:TypeTag[B]) =

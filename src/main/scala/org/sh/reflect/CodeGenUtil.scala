@@ -18,10 +18,7 @@ object CodeGenUtil {
     )
 
   //  is below used anywhere?
-  //////////////////////////////////////////////////////////
   def filterReturnTypes(methods:List[(ScalaMethod, Class[_])]) = methods filter  (x => exactClassMatch(x._2))
-  //  def filterReturnTypes(methods:List[(ScalaMethod, Class[_])]) = methods filter  (x => exactMatch(x._2.getCanonicalName))
-  //////////////////////////////////////////////////////////
 
   def validateReturnTypes(methods:List[(ScalaMethod, Class[_])]) =
     methods foreach(x => {
@@ -30,17 +27,9 @@ object CodeGenUtil {
           throw new Exception("method "+x._1.name+" returns unsupported type: "+x._1.returnType)
         }
       }
-    )      
-  //  def validateReturnTypes(methods:List[(ScalaMethod, Class[_])]) =
-  //    methods foreach(x => {
-  //        if (!exactMatch(x._2.getCanonicalName)){
-  //          println("Error: method "+x._1.parentClassName+"#"+x._1.name+" returns unsupported type: "+x._1.returnType)
-  //          throw new Exception("method "+x._1.name+" returns unsupported type: "+x._1.returnType)
-  //        }
-  //      }
-  //    )      
-  // added following to match using type handler rather than strings (11/Dec/2015)
+    )
   //////////////////////////////////////////////////////////
+  // added following to match using type handler rather than strings (11/Dec/2015)
   def exactClassMatch(st:Class[_]) = DefaultTypeHandler.getHandledTypes.find(_ == st) match {
     case Some(_) => true
     case _ => false

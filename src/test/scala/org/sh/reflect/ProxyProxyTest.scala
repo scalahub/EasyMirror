@@ -46,15 +46,41 @@ object TestVectors {
       s"""{'pid':'${DummyTestServer.pid}','reqName':'foo','reqData':'{\\'s\\':\\'hello\\', \\'i\\':\\'3\\'}'}""",
       """hello3"""
     ),
-    TestVector(ProxyProxyServer.pid, "getResponse",
+    TestVector(ProxyProxyServer.pid,"getResponse",
       ProxyProxyServer.getProxyReqJSON(DummyTestServer.pid, "foo", "{'s':'hello', 'i':'3'}"),
       """hello3"""
+    ),
+    TestVector("myObjectIDMeta", "getMethodsInScala","",
+      """["def otherMethod(myParam:String): void","def mainMethod(a:int, b:String): scala.math.BigInt"]"""
     )
   )
 }
 
 // following object tests above ProxyProxyServer.
 object TestProxyProxyServer extends App {
+
+  object MyObject {
+    def my_mainMethod(a:Int, b:String) = BigInt(a)
+    def my_otherMethod(myParam:String) = {} // returns Unit
+    def someOtherMethod(a:Int, b:String) = BigInt(a)
+  }
+  val processSuperClass = false
+  // add the object to the form processor
+  EasyProxy.addProcessor("myObjectID", "my_", MyObject, DefaultTypeHandler, processSuperClass)
+  // process only methods starting with "my"
+  // use the id "myObjectID" to refer to the object when using Proxy
+
+  // invoke the my_mainMethod using the Proxy, but skip the prefix ("my_") when calling
+  println(EasyProxy.getResponse("myObjectID", "mainMethod", "{'a':'1','b':'hello'}"))
+
+  // following will also work because method name in original object starts with "my_"
+  println(EasyProxy.getResponse("myObjectID", "otherMethod","{'myParam':'hello'}"))
+
+  // get details for methods available for invocation; append "Meta" to object id to get meta object id.
+  // meta object is the object that stores information about the main object
+  println(EasyProxy.getResponse("myObjectIDMeta", "getMethodsInScala", ""))
+  // prints ["def otherMethod(myParam:String): void","def mainMethod(a:int, b:String): scala.math.BigInt"]
+
   // do we need to test the below line?
   EasyProxy.addProcessor(DummyTestServer.pid, "a_", DummyTestServer, DefaultTypeHandler, false)
   testVectors.foreach{
