@@ -178,15 +178,17 @@ class TypeHandler {
           val result = Await.result(f, 500 millis)
           typeToString(result.getClass, result)
         case a: Array[_] => encodeJSONArray(a.map(_.toString)).toString
-        case o:org.json.JSONObject => o.toString
+        case o:org.json.JSONObject =>
+          o.toString
         case a: Seq[_] => encodeJSONSeq(a.map(_.toString)).toString
         case Unit => "void"
         case null => "null"
-        case anyRef:JsonFormatted => anyRef.toString
+        case anyRef:JsonFormatted =>
+          anyRef.toString
         case anyRef:AnyRef => 
           println(s" [Reflect:TypeToString] Error for [${anyRef.getClass}] with data: "+anyRef.toString.take(100)+"\n[end data]")
           serialize(anyRef)
-        case any => 
+        case any =>
           any.toString
       }
     case any => any.get._3(a)
@@ -194,7 +196,7 @@ class TypeHandler {
 
   // following to use for Java-client <--http--> EasyProxy Server communication
   // for browser <--http--> EasyProxy Server communication, use typeToString
-  // 
+
   def typeToStringJavaNoWeb(objectType:Class[_], a:Any):String = handledTypes.find(_._1 == objectType) match {
     case None => // throw new Exception("output: Could not get handler for "+objectType.getCanonicalName)
       // println("[INFO]: No handler for converting "+objectType.getCanonicalName+" to String; using default toString() method.")

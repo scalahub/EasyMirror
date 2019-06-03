@@ -93,7 +93,7 @@ class FormProcessor(startTag:String, c:AnyRef, th:TypeHandler, optIs:Option[Inpu
   
   def processForm(formName:String, jsonString:String) = {
     val (result, retType) = processFormJavaObjectOutput(formName, jsonString)
-    th.typeToString(retType, result)  
+    th.typeToString(retType, result)
   }
   def processFormForSerializableOutput(formName:String, jsonString:String) = serialize(processFormJavaObjectOutput(formName, jsonString)._1)
 

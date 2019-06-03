@@ -82,8 +82,10 @@ object EasyProxy {
           }
         } 
         catch { 
-          case e:Any => 
-            println(s" [PROXY:ERROR] pid:$pid, formName:$formName, reqData:$reqDataJSON")
+          case e:Any =>
+
+            println(s"[REFLECT:ERROR] ${e.getClass} at pid:$pid, formName:$formName, reqData:$reqDataJSON. Message [${e.getMessage}]")
+
             e.printStackTrace
             throw ProxyException(getExceptionStack(e))
         }
