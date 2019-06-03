@@ -102,16 +102,22 @@ class FormProcessor(startTag:String, c:AnyRef, th:TypeHandler, optIs:Option[Inpu
     case Some((s:ScalaMethod, m:Method)) => 
       val (x, y) = (
         m.invoke(
-          c, th.getParams(s.params.map(p => p.paraName), m.getParameterTypes, jsonString): _*
+          c,
+          th.getParams(
+            s.params.map(p => p.paraName),
+            m.getParameterTypes, jsonString
+          ): _*
         ),
         m.getReturnType
       )
       (x, y)
     case any => throw new Exception(formName+": no method found")
   }
+
   def getPublicMethods:List[ScalaMethod] = {
     availableMethods.map(x => x._1.getModifiedMethod(displayName(x._1), c.getClass.getCanonicalName))
   }
+
   def getPublicMethodsTypes = availableMethods.map(x => (displayName(x._1), x._2.getReturnType, x._2.getParameterTypes))
 
   // Following are "meta" methods. They return information about the current

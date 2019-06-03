@@ -82,7 +82,10 @@ class TypeHandler {
     addType[Array[Int]](classOf[Array[Int]], decodeJSONArray(_).map(_.toString.toInt), encodeJSONArray(_).toString)
     addType[Array[Double]](classOf[Array[Double]], decodeJSONArray(_).map(_.toString.toDouble), encodeJSONArray(_).toString)
     addType[Array[Float]](classOf[Array[Float]], decodeJSONArray(_).map(_.toString.toFloat), encodeJSONArray(_).toString)
-    
+
+    // below added 03 June 2019
+    addType[Array[Boolean]](classOf[Array[Boolean]], decodeJSONArray(_).map(_.toString.toBoolean), encodeJSONArray(_).toString)
+
     /////////////////// Option //////////////////
     def addOptType[B](func1: String => Option[B])(implicit tag:ClassTag[B], typeTag:TypeTag[B]) =
       addType[Option[B]](classOf[Option[B]], func1, o => encodeJSONArray(o.map(_.toString).toArray).toString)
