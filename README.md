@@ -13,7 +13,8 @@ It takes the class name, method name and the named parameters and invokes the gi
 This contains utilities for auto-generating code in various languages. It uses Form processor internally.
 
 # Usage
-Some examples of usage are given in the [test](https://github.com/scalahub/EasyMirror/blob/master/src/test/scala/org/sh/reflect/test "test") folder.
+Some examples of usage are given in the [test](https://github.com/scalahub/EasyMirror/tree/master/src/test/scala/org/sh/reflect "test") folder.
+ 
 The following code snippet explains usage of the library.
 
 To read the methods in a class (taken from [ProxyTest.scala](https://github.com/scalahub/EasyMirror/blob/master/src/test/scala/org/sh/reflect/test/ProxyTest.scala "ProxyTest.scala")):
