@@ -9,7 +9,7 @@ lazy val ScalaUtils = RootProject(uri("https://github.com/scalahub/ScalaUtils.gi
 
 lazy val root = (project in file(".")).dependsOn(ScalaUtils).settings(
   mainClass in (Test, run) := Some("org.sh.reflect.TestDoubleProxyServer")
-  //mainClass in (Test, run) := Some("org.sh.reflect.TestDoubleProxyServer")
+  //mainClass in (Test, run) := Some("org.sh.reflect.ProxyTest")
 )
 
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.5.8"
