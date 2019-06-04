@@ -5,9 +5,12 @@ version := "0.1"
 scalaVersion := "2.12.8"
 
 lazy val ScalaUtils = RootProject(uri("https://github.com/scalahub/ScalaUtils.git"))
-// lazy val ScalaUtils = RootProject(uri("../ScalaUtils"))
+//lazy val ScalaUtils = RootProject(uri("../ScalaUtils"))
 
-lazy val root = project in file(".") dependsOn ScalaUtils
+lazy val root = (project in file(".")).dependsOn(ScalaUtils).settings(
+  mainClass in (Test, run) := Some("org.sh.reflect.TestDoubleProxyServer")
+  //mainClass in (Test, run) := Some("org.sh.reflect.TestDoubleProxyServer")
+)
 
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.5.8"
 

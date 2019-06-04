@@ -4,8 +4,8 @@ import org.sh.reflect.TestVectors.testVectors
 import org.sh.utils.common.json.JSONUtil
 import org.sh.reflect._
 
-object ProxyProxyServer {
-  val pid = "ProxyProxy"
+object DoubleProxyServer {
+  val pid = "DoubleProxy"
   EasyProxy.addProcessor(pid, "__", this, DefaultTypeHandler, true)
 
   def __getResponse(pid:String, reqName:String, reqData:String) = 
@@ -25,29 +25,29 @@ case class TestVector(pid:String, reqName:String, reqData:String, expected:Strin
 
 object TestVectors {
   val testVectors = Seq(
-    TestVector(EasyProxy.metaPid(ProxyProxyServer.pid), "getMethodsInJava", "",
+    TestVector(EasyProxy.metaPid(DoubleProxyServer.pid), "getMethodsInJava", "",
       """["String getResponse(String pid,String reqName,String reqData)"]"""
     ),
     TestVector(EasyProxy.metaPid(DummyObject.pid), "getMethodsInScala", "",
       """["def foo(s:String, i:int): String","def bar(s:String, i:long): String","def baz(s:String): String[]"]"""
     ),
-    TestVector(EasyProxy.metaPid(ProxyProxyServer.pid), "getMethodInScala", "{'name':'getResponse'}",
+    TestVector(EasyProxy.metaPid(DoubleProxyServer.pid), "getMethodInScala", "{'name':'getResponse'}",
       """["def getResponse(pid:String, reqName:String, reqData:String): String"]"""
     ),
     TestVector(EasyProxy.metaPid(DummyObject.pid), "getMethodsInJava", "",
       """["String foo(String s,int i)","String bar(String s,long i)","String[] baz(String s)"]"""
     ),
     TestVector(DummyObject.pid, "foo", "{'s':'hello', 'i':'3'}", """hello3"""),
-    TestVector(ProxyProxyServer.pid,"getResponse",
+    TestVector(DoubleProxyServer.pid,"getResponse",
       "{'pid':'"+DummyObject.pid+"','reqName':'foo','reqData':'{\\'s\\':\\'hello\\', \\'i\\':\\'3\\'}'}",
       """hello3"""
     ),
-    TestVector(ProxyProxyServer.pid,"getResponse",
+    TestVector(DoubleProxyServer.pid,"getResponse",
       s"""{'pid':'${DummyObject.pid}','reqName':'foo','reqData':'{\\'s\\':\\'hello\\', \\'i\\':\\'3\\'}'}""",
       """hello3"""
     ),
-    TestVector(ProxyProxyServer.pid,"getResponse",
-      ProxyProxyServer.getProxyReqJSON(DummyObject.pid, "foo", "{'s':'hello', 'i':'3'}"),
+    TestVector(DoubleProxyServer.pid,"getResponse",
+      DoubleProxyServer.getProxyReqJSON(DummyObject.pid, "foo", "{'s':'hello', 'i':'3'}"),
       """hello3"""
     ),
     TestVector("myObjectIDMeta", "getMethodsInScala","",
@@ -56,8 +56,8 @@ object TestVectors {
   )
 }
 
-// following object tests above ProxyProxyServer.
-object TestProxyProxyServer extends App {
+// following object tests above DoubleProxyServer.
+object TestDoubleProxyServer extends App {
 
   object MyObject {
     def my_mainMethod(a:Int, b:String) = BigInt(a)
@@ -88,27 +88,26 @@ object TestProxyProxyServer extends App {
       val actual = EasyProxy.getResponse(pid, reqName, reqData)
       assert(actual == expected, s"Expected: $expected. Actual: $actual")
   }
-  println("Tests passed for pid: "+ProxyProxyServer.pid)
+  println("Tests passed for pid: "+DoubleProxyServer.pid)
 }
 
-
-// The ProxyQueryMaker (below) cannot be tested here because it needs an implementation of QueryMaker
+// The DoubleProxyQueryMaker (below) cannot be tested here because it needs an implementation of QueryMaker
 // The implementations are avalable in ReflectSocket and ReflectWeb, where ProxyQueryMaker can be tested
-class ProxyQueryMaker(qm:QueryMaker) extends QueryMaker{
+class DoubleProxyQueryMaker(qm:QueryMaker) extends QueryMaker{
   def makeQuery(pid:String, reqName:String, reqData:String) =
-    qm.makeQuery(ProxyProxyServer.pid, "getResponse", ProxyProxyServer.getProxyReqJSON(pid, reqName, reqData))
+    qm.makeQuery(DoubleProxyServer.pid, "getResponse", DoubleProxyServer.getProxyReqJSON(pid, reqName, reqData))
   def isConnected = qm.isConnected
 }
 
-// The ProxyQueryMakerTest (below) cannot be run here because it needs an implementation of QueryMaker
+// The TestDoubleProxyQueryMaker (below) cannot be run here because it needs an implementation of QueryMaker
 // The implementations are avalable in ReflectSocket and ReflectWeb, where ProxyQueryMaker can be tested
-class ProxyQueryMakerTest(qm:QueryMaker) {
-  val pqm = new ProxyQueryMaker(qm)
+class TestDoubleProxyQueryMaker(qm:QueryMaker) {
+  val pqm = new DoubleProxyQueryMaker(qm)
   testVectors.foreach{
     case TestVector(pid, reqName, reqData, expected) =>
       val actual = pqm.makeQuery(pid, reqName, reqData)
       assert(actual == expected, s"Expected: $expected. Actual: $actual")
   }
-  println("Proxy tests passed for pid: "+ProxyProxyServer.pid)
+  println("Proxy tests passed for pid: "+DoubleProxyServer.pid)
 }
 
