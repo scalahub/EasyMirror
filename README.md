@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/scalahub/EasyMirror.svg?branch=master)](https://travis-ci.org/scalahub/EasyMirror)
 # EasyMirror
 EasyMirror is a set of reflection utilities for use in Scala (and Java). It consists of three components: 
 ### Form Processor
