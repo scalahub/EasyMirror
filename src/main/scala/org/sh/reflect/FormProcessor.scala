@@ -2,8 +2,8 @@ package org.sh.reflect
 
 import java.lang.reflect.Method
 import Util._
-import org.sh.utils.common.Util.serialize
-import org.sh.utils.common.encoding.Base64
+import org.sh.utils.Util.serialize
+import org.sh.utils.encoding.Base64
 import java.io._
 import org.sh.reflect.DataStructures._
 

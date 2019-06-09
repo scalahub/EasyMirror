@@ -29,7 +29,7 @@ class ClientCodeGenerator(cqm: QueryMaker) {
     val className = newClassName+"AutoGen"
     val file = "src/"+pkg.replace(".", "/")+"/"+className+".scala"
     println("Writing to file: "+file)
-    org.sh.utils.common.file.Util.writeToTextFile(file, generate(className, getDefaultPid(classToProcess), new FP(tag, classToProcess, new TH), pkg))
+    org.sh.utils.file.Util.writeToTextFile(file, generate(className, getDefaultPid(classToProcess), new FP(tag, classToProcess, new TH), pkg))
   } 
   def generate(className:String, processorID:String, fp:FormProcessor, pkg:String):String = {
     val mainMethods = getFormMethods(fp).sortWith((x, y) => x._1.name < y._1.name)
@@ -38,7 +38,7 @@ class ClientCodeGenerator(cqm: QueryMaker) {
     val allMethods = mainMethods ::: metaMethods
     validateReturnTypes(allMethods)
     validateParamTypes(allMethods)
-    val newTypes = th.getClass.getCanonicalName :: "org.sh.utils.common.json.JSONUtil" :: cqm.getClass.getCanonicalName :: getNewTypes(allMethods)
+    val newTypes = th.getClass.getCanonicalName :: "org.sh.utils.json.JSONUtil" :: cqm.getClass.getCanonicalName :: getNewTypes(allMethods)
     val preString = "/*\n"+preamble(this)+"*/\n"+ newTypes.foldLeft("package "+pkg+"\n\n")((x, y)=> x + "import "+y+"\n")+"\n"
     val initString =
       "  private def split(a:Array[(String, Any)]):(Array[String], Array[Object]) = (a.map(_._1), a.map(_._2.asInstanceOf[AnyRef]))\n"+

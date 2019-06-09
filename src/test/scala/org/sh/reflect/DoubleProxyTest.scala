@@ -1,7 +1,7 @@
 package org.sh.reflect
 
 import org.sh.reflect.TestVectors.testVectors
-import org.sh.utils.common.json.JSONUtil
+import org.sh.utils.json.JSONUtil
 import org.sh.reflect._
 
 object DoubleProxyServer {

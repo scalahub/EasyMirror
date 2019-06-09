@@ -33,7 +33,7 @@ class ServerCodeGenerator(c: List[AnyRef]) {
     val objectName = objName+"AutoGen"
     val file = "src/"+pkg.replace(".", "/")+"/"+objectName+".scala"
     println("Writing to file: "+file)
-    org.sh.utils.common.file.Util.writeToTextFile(file, generate(objectName, pkg))
+    org.sh.utils.file.Util.writeToTextFile(file, generate(objectName, pkg))
   } 
   def generate(objName:String, pkg:String, prefix:String=defaultPrefix):String = {
     assert(prefix != "", "prefix cannot be empty.")

@@ -12,8 +12,8 @@ import org.objectweb.asm.tree.AbstractInsnNode
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.LocalVariableNode
 import org.objectweb.asm.tree.MethodNode
-import org.sh.utils.common.encoding.Base64
-import org.sh.utils.common.file._
+import org.sh.utils.encoding.Base64
+import org.sh.utils.file._
 
 object Util extends TraitFilePropertyReader {
   val propertyFile = "reflect.properties"
@@ -24,7 +24,7 @@ object Util extends TraitFilePropertyReader {
     // Important. We can only handle ONE instance of a class at a time.
     // to handle multiple instances, use object Foo extends Bar(...)
     // Why? We don't know how to match pid and class instances. Since instances are runtime, while pids (for html etc) are generated at compile-time
-    org.sh.utils.common.Util.sha256Small(org.sh.utils.common.Util.sha256Small(cls.getClass.getCanonicalName)+"iowy8uhciergf674tgycb4yt4gb") collect {
+    org.sh.utils.Util.sha256Small(org.sh.utils.Util.sha256Small(cls.getClass.getCanonicalName)+"iowy8uhciergf674tgycb4yt4gb") collect {
       case c if "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".contains(c.toUpper) => c
     }
   }

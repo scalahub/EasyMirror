@@ -3,8 +3,8 @@ package org.sh.reflect
 
 import java.util.ArrayList
 
-import org.sh.utils.common.json.JSONUtil
-import org.sh.utils.common.json.JSONUtil._
+import org.sh.utils.json.JSONUtil
+import org.sh.utils.json.JSONUtil._
 
 import scala.collection.JavaConversions._
 import scala.concurrent.Await
@@ -12,8 +12,8 @@ import scala.concurrent.Future
 import scala.reflect.ClassTag
 import scala.reflect.runtime.universe._
 import scala.reflect._
-import org.sh.utils.common.Util._
-import org.sh.utils.common.encoding.Hex
+import org.sh.utils.Util._
+import org.sh.utils.encoding.Hex
 
 /**
  * TypeHandler is a class encapsulating methods for (de)serializing Scala/Java objects. That is methods for converting string to a Scala type and vice versa

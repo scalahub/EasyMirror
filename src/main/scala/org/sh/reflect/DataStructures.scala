@@ -1,8 +1,8 @@
 
 package org.sh.reflect
 
-import org.sh.utils.common.json.JSONUtil
-import org.sh.utils.common.json.JSONUtil.JsonFormatted
+import org.sh.utils.json.JSONUtil
+import org.sh.utils.json.JSONUtil.JsonFormatted
 import org.objectweb.asm.Type
 
 object DataStructures {

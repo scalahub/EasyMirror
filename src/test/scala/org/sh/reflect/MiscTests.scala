@@ -3,9 +3,9 @@ package org.sh.reflect
 
 object JSONArrayTest {
   val ar = Array("hello", "world")
-  val a = org.sh.utils.common.json.JSONUtil.encodeJSONArray(ar)
+  val a = org.sh.utils.json.JSONUtil.encodeJSONArray(ar)
   println (a)
-  val b = org.sh.utils.common.json.JSONUtil.decodeJSONArray(a.toString)
+  val b = org.sh.utils.json.JSONUtil.decodeJSONArray(a.toString)
   b.map(x => println (x))
 }
 

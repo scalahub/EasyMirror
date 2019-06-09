@@ -1,7 +1,7 @@
 
 package org.sh.reflect
 
-import org.sh.utils.common.json.JSONUtil
+import org.sh.utils.json.JSONUtil
 import org.sh.reflect.Util._
 
 object ProxyTest extends App{
