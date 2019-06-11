@@ -38,8 +38,8 @@ class TypeHandler {
    *
    * T is the class to be handled
    *
-   * func1 is a method that takes string and outputs an instance of T
-   * func2 is a method that takes in an instance of T and outputs a string
+   * func1 is a method that takes string and outputs an instance of T (used for user input mostly)
+   * func2 is a method that takes in an instance of T and outputs a string (used for system output mostly)
    */
   def addType[T <: AnyRef](c:Class[T], func1: String => T, func2: T => String) =
     if (! handledTypes.map(_._1).contains(c)) handledTypes.add((c, func1.asInstanceOf[String => Any], func2.asInstanceOf[Any => String]))
@@ -119,8 +119,13 @@ class TypeHandler {
       addType[Option[B]](classOf[Option[B]], func1, o => encodeJSONArray(o.map(_.toString).toArray).toString)
 
 
-    addOptType[String](s => s match {case "None" => None:Option[String]; case any => Some(any):Option[String] })
-    addOptType(s => s match {case "None" => None:Option[Int]; case any => Some(any.toInt):Option[Int] })
+    // addOptType[String](s => s match {case "None" => None:Option[String]; case any => Some(any):Option[String] })
+    // addOptType(s => s match {case "None" => None:Option[Int]; case any => Some(any.toInt):Option[Int] })
+
+    // following logic:
+    //  for Option[String], in the user's input (i.e., in String => T),
+    addOptType[String](s => s match {case "" => None:Option[String]; case any => Some(any):Option[String] })
+    addOptType(s => s match {case "" => None:Option[Int]; case any => Some(any.toInt):Option[Int] })
 
     addType[java.util.List[String]](classOf[java.util.List[String]], decodeJSONArray(_).map(_ toString).toList, x => encodeJSONArray(x.toArray).toString)
     addType[java.lang.Integer](classOf[java.lang.Integer], new java.lang.Integer(_), _.toString)
@@ -146,17 +151,10 @@ class TypeHandler {
     lazy val jp = getJSONParams(names, jsonString)
     names.indices.map(i => stringToType(types.apply(i), jp.apply(i)).asInstanceOf[AnyRef]).toArray
   }
+
   /**
    * Main method to be invoked when converting string to a Scala type (deserializing)
    */
-  def stringToTypeOld(objectType:Class[_], s:String) = {
-    handledTypes.find(_._1 == objectType) match {
-      //     handledTypes.find(_._1.getCanonicalName == objectType.getCanonicalName) match {
-      case None => throw new Exception("input: Could not get handler for "+objectType.getCanonicalName)
-      case any => any.get._2(s)
-    }
-  }
-  //   
   def stringToType[T](objectType:Class[T], s:String) = {
     handledTypes.find(_._1 == objectType) match {
       case None => 
@@ -165,6 +163,7 @@ class TypeHandler {
         any.get._2(s)
     }
   }
+
   /**
    * Main method to be invoked when converting a Scala type to String (serializing)
    */
