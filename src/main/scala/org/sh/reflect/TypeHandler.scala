@@ -184,9 +184,11 @@ class TypeHandler {
         case null => "null"
         case anyRef:JsonFormatted =>
           anyRef.toString
-        case anyRef:AnyRef => 
+        case anyRef:AnyRef =>
           println(s" [Reflect:TypeToString] Error for [${anyRef.getClass}] with data: "+anyRef.toString.take(100)+"\n[end data]")
-          serialize(anyRef)
+          anyRef.toString
+          // commented below line on 11 Jun 2019
+          // serialize(anyRef)
         case any =>
           any.toString
       }

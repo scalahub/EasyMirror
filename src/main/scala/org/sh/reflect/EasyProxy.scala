@@ -75,10 +75,10 @@ object EasyProxy {
     case Some(fp:FormProcessor) => usingDeny(fp, formName) { 
         try {
           if (useJavaSerlializedOutput) {
-            fp.processFormForSerializableOutput(formName, reqDataJSON) 
+            fp.processFormForSerializableOutput(formName, reqDataJSON)
           }
           else {
-            fp.processForm(formName, reqDataJSON) 
+            fp.processForm(formName, reqDataJSON)
           }
         } 
         catch { 
