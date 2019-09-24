@@ -16,6 +16,18 @@ import org.sh.utils.encoding.Base64
 import org.sh.utils.file._
 
 object Util extends TraitFilePropertyReader {
+  sealed trait JavaVer
+  object Java8 extends JavaVer
+  object Java7 extends JavaVer
+  object Java11 extends JavaVer
+  private val javaPrefix = System.getProperty("java.runtime.version").substring(0, 3)
+  val javaVer:JavaVer = javaPrefix match {
+    case "1.8" => Java8
+    case "1.7" => Java7
+    case "11." => Java11
+    case _ => throw new Exception(s"Unsupported java version $javaPrefix")
+  }
+
   val propertyFile = "reflect.properties"
   var debug = read("debug", false)
   val defaultPrefix = "_" // Methods starting with this will be considered in the EasyProxy
@@ -86,6 +98,7 @@ object Util extends TraitFilePropertyReader {
           sw.toString();          
         }
         def getStr(optVarNode:Option[LocalVariableNode]) = {
+
           optVarNode.map {varNode => 
            try {
              val textNode = varNode.start.getPrevious
