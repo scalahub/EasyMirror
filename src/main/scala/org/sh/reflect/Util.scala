@@ -2,8 +2,10 @@ package org.sh.reflect
 
 import java.io._
 import java.lang.reflect.Method
+
 import org.objectweb.asm.util.Textifier
 import org.objectweb.asm.util.TraceMethodVisitor
+
 import scala.collection.JavaConversions._
 import org.sh.reflect.DataStructures._
 import org.objectweb.asm.ClassReader
@@ -14,6 +16,7 @@ import org.objectweb.asm.tree.LocalVariableNode
 import org.objectweb.asm.tree.MethodNode
 import org.sh.utils.encoding.Base64
 import org.sh.utils.file._
+import org.sh.utils.json.JSONUtil.JsonFormatted
 
 object Util extends TraitFilePropertyReader {
   sealed trait JavaVer
@@ -47,7 +50,9 @@ object Util extends TraitFilePropertyReader {
    * extracts the names, parameter names and parameter types of all methods of declaringClass that start with startString
    * stackoverflow.com/questions/7640617/how-to-get-parameter-names-and-types-via-reflection-in-scala-java-methods
    */
-  case class MethodVar(name:String, desc:String) // used internally
+  case class MethodVar(name:String, desc:String) {
+    override def toString: String = s"$name: $desc"
+  }
 
   def getMethods(c:AnyRef, is:java.io.InputStream) = {
     val cn = new ClassNode();
@@ -65,11 +70,13 @@ object Util extends TraitFilePropertyReader {
 
         var paramList:List[Param] = Nil
         if (argTypes.length > 0 && vars.length > 0) {
-          val methodVars:Map[Int, MethodVar] = vars.map{ v =>
+          val methodVars = vars.map{ v =>
             v.index -> MethodVar(v.name, v.desc)
-          }.toMap
+          }.sortBy(_._1)
+          val methodVarIt = methodVars.toIterator
+          methodVarIt.next // first one refers to 'this'
           for (i <- 1 to argTypes.length) {
-            val param = Param(methodVars.get(i).map(_.name).getOrElse(""), argTypes(i-1))
+            val param = Param(methodVarIt.next._2.name, argTypes(i-1))
             paramList = param :: paramList
           }
         }
