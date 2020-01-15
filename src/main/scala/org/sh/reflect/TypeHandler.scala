@@ -6,7 +6,9 @@ import java.util.ArrayList
 import org.sh.utils.json.JSONUtil
 import org.sh.utils.json.JSONUtil._
 
-import scala.collection.JavaConversions._
+//import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
+
 import scala.concurrent.Await
 import scala.concurrent.Future
 import scala.reflect.ClassTag
@@ -32,7 +34,7 @@ class TypeHandler {
   //    2. The parameter handler function that converts string to correct type of 1.
   //    3. The return handler function that converts the type of 1. to a string
   private var handledTypes:ArrayList[(Class[_], String => Any, Any => String)] = new ArrayList(0)
-  def getHandledTypes = handledTypes.map(_._1)
+  def getHandledTypes = handledTypes.asScala.map(_._1)
   /**
    * adds a new type to handle (i.e., (de)serialize a Scala/Java class
    *
@@ -42,27 +44,27 @@ class TypeHandler {
    * func2 is a method that takes in an instance of T and outputs a string (used for system output mostly)
    */
   def addType[T <: AnyRef](c:Class[T], func1: String => T, func2: T => String) =
-    if (! handledTypes.map(_._1).contains(c)) handledTypes.add((c, func1.asInstanceOf[String => Any], func2.asInstanceOf[Any => String]))
+    if (! handledTypes.asScala.map(_._1).contains(c)) handledTypes.add((c, func1.asInstanceOf[String => Any], func2.asInstanceOf[Any => String]))
 
   def addTypeTagged[Tag:TypeTag, T <: AnyRef](c:Class[T], func1: String => T, func2: T => String) =
-    if (! handledTypes.map(_._1).contains(c)) handledTypes.add((c, func1.asInstanceOf[String => Any], func2.asInstanceOf[Any => String]))
+    if (! handledTypes.asScala.map(_._1).contains(c)) handledTypes.add((c, func1.asInstanceOf[String => Any], func2.asInstanceOf[Any => String]))
 
 
   private val protectedTypes = { // protect above types from removal as they are needed for basic functionality
     initialize
-    handledTypes.map(_._1)
+    handledTypes.asScala.map(_._1)
   }
   def initialize = {
     // add primitive handlers
     /* see http://stackoverflow.com/questions/7696930/how-to-match-classes-of-boolean-types-and-boolean-types */
-    handledTypes.add((java.lang.Boolean.TYPE, _ toBoolean, _ toString))
-    handledTypes.add((java.lang.Double.TYPE, _ toDouble, _ toString))
-    handledTypes.add((java.lang.Integer.TYPE, _ toInt, _ toString))
-    handledTypes.add((java.lang.Long.TYPE, _ toLong, _ toString))
-    handledTypes.add((java.lang.Float.TYPE, _ toFloat, _ toString))
+    handledTypes.add((java.lang.Boolean.TYPE, _.toBoolean, _.toString))
+    handledTypes.add((java.lang.Double.TYPE, _.toDouble, _.toString))
+    handledTypes.add((java.lang.Integer.TYPE, _.toInt, _.toString))
+    handledTypes.add((java.lang.Long.TYPE, _.toLong, _.toString))
+    handledTypes.add((java.lang.Float.TYPE, _.toFloat, _.toString))
     
     // TESTING BELOW 12 Oct 2017
-    handledTypes.add((java.lang.Void.TYPE, _ => Unit, _ => "Ok"))
+    handledTypes.add((java.lang.Void.TYPE, _ => (), _ => "Ok"))
     
     // add Boxed versions of primitive types
     handledTypes.add((classOf[Double], stringToType(java.lang.Double.TYPE , _), typeToString(java.lang.Double.TYPE , _)))
@@ -80,7 +82,7 @@ class TypeHandler {
 
     // COLLECTIONS
     // later on reuse 
-    addType[Array[String]](classOf[Array[String]], decodeJSONArray(_).map(_ toString), encodeJSONArray(_).toString)
+    addType[Array[String]](classOf[Array[String]], decodeJSONArray(_).map(_.toString), encodeJSONArray(_).toString)
     addType[Array[Long]](classOf[Array[Long]], decodeJSONArray(_).map(_.toString.toLong), encodeJSONArray(_).toString)
     addType[Array[Int]](classOf[Array[Int]], decodeJSONArray(_).map(_.toString.toInt), encodeJSONArray(_).toString)
     addType[Array[Double]](classOf[Array[Double]], decodeJSONArray(_).map(_.toString.toDouble), encodeJSONArray(_).toString)
@@ -127,7 +129,7 @@ class TypeHandler {
     addOptType[String](s => s match {case "" => None:Option[String]; case any => Some(any):Option[String] })
     addOptType(s => s match {case "" => None:Option[Int]; case any => Some(any.toInt):Option[Int] })
 
-    addType[java.util.List[String]](classOf[java.util.List[String]], decodeJSONArray(_).map(_ toString).toList, x => encodeJSONArray(x.toArray).toString)
+    addType[java.util.List[String]](classOf[java.util.List[String]], decodeJSONArray(_).map(_.toString).toList.asJava, x => encodeJSONArray(x.toArray).toString)
     addType[java.lang.Integer](classOf[java.lang.Integer], new java.lang.Integer(_), _.toString)
   }
 
@@ -146,7 +148,7 @@ class TypeHandler {
    * c is the class of the type to be removed. For instance, to remove (already added) type MyClass, use Class.forName("MyClass") as c
    */
   def removeType(c:Class[_]) = 
-    if (! protectedTypes.contains(c)) handledTypes.remove(handledTypes.map(_._1).indexOf(c))
+    if (! protectedTypes.contains(c)) handledTypes.remove(handledTypes.asScala.map(_._1).indexOf(c))
   def getParams(names:List[String], types:Array[Class[_]], jsonString:String):Array[Object] = {
     lazy val jp = getJSONParams(names, jsonString)
     names.indices.map(i => stringToType(types.apply(i), jp.apply(i)).asInstanceOf[AnyRef]).toArray
@@ -156,7 +158,7 @@ class TypeHandler {
    * Main method to be invoked when converting string to a Scala type (deserializing)
    */
   def stringToType[T](objectType:Class[T], s:String) = {
-    handledTypes.find(_._1 == objectType) match {
+    handledTypes.asScala.find(_._1 == objectType) match {
       case None => 
         deserialize(s).asInstanceOf[T]
       case any => 
@@ -167,20 +169,20 @@ class TypeHandler {
   /**
    * Main method to be invoked when converting a Scala type to String (serializing)
    */
-  def typeToString(objectType:Class[_], a:Any):String = handledTypes.find(_._1 == objectType) match {
+  def typeToString(objectType:Class[_], a:Any):String = handledTypes.asScala.find(_._1 == objectType) match {
     case None => // throw new Exception("output: Could not get handler for "+objectType.getCanonicalName)
       // println("[INFO]: No handler for converting "+objectType.getCanonicalName+" to String; using default toString() method.")
       import scala.concurrent.ExecutionContext.Implicits.global
       import scala.concurrent.duration._
       a match {
         case f:Future[_] => 
-          val result = Await.result(f, 500 millis)
+          val result = Await.result(f, 500.millis)
           typeToString(result.getClass, result)
         case a: Array[_] => encodeJSONArray(a.map(_.toString)).toString
         case o:org.json.JSONObject =>
           o.toString
         case a: Seq[_] => encodeJSONSeq(a.map(_.toString)).toString
-        case Unit => "void"
+        case () => "void"
         case null => "null"
         case anyRef:JsonFormatted =>
           anyRef.toString
@@ -198,14 +200,14 @@ class TypeHandler {
   // following to use for Java-client <--http--> EasyProxy Server communication
   // for browser <--http--> EasyProxy Server communication, use typeToString
 
-  def typeToStringJavaNoWeb(objectType:Class[_], a:Any):String = handledTypes.find(_._1 == objectType) match {
+  def typeToStringJavaNoWeb(objectType:Class[_], a:Any):String = handledTypes.asScala.find(_._1 == objectType) match {
     case None => // throw new Exception("output: Could not get handler for "+objectType.getCanonicalName)
       // println("[INFO]: No handler for converting "+objectType.getCanonicalName+" to String; using default toString() method.")
       import scala.concurrent.ExecutionContext.Implicits.global
       import scala.concurrent.duration._
       a match {
         case f:Future[_] => 
-          val result = Await.result(f, 500 millis)
+          val result = Await.result(f, 500.millis)
           typeToString(result.getClass, result)
         case anyRef:AnyRef => 
           serialize(anyRef)

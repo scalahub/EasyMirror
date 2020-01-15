@@ -2,7 +2,7 @@
 package org.sh.reflect
 
 import org.sh.reflect.DataStructures.ScalaMethod
-import scala.collection.JavaConversions._
+//import scala.jdk.CollectionConverters._
 
 object CodeGenUtil {
   def getFormMethods(fp:FormProcessor) = fp.getPublicMethods.zip(fp.getPublicMethodsTypes.map(_._2))

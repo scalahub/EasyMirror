@@ -6,7 +6,7 @@ import java.lang.reflect.Method
 import org.objectweb.asm.util.Textifier
 import org.objectweb.asm.util.TraceMethodVisitor
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import org.sh.reflect.DataStructures._
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.Type
@@ -69,8 +69,8 @@ object Util extends TraitFilePropertyReader {
         val vars = m.localVariables.asInstanceOf[java.util.List[LocalVariableNode]];
 
         var paramList:List[Param] = Nil
-        if (argTypes.length > 0 && vars.length > 0) {
-          val methodVars = vars.map{ v =>
+        if (argTypes.length > 0 && vars.asScala.length > 0) {
+          val methodVars = vars.asScala.map{ v =>
             v.index -> MethodVar(v.name, v.desc)
           }.sortBy(_._1)
           val methodVarIt = methodVars.toIterator
@@ -83,15 +83,15 @@ object Util extends TraitFilePropertyReader {
         // refer http://stackoverflow.com/a/19173813/243233
         // http://stackoverflow.com/questions/31367070/how-to-read-a-final-string-value-in-asm/31367264#31367264
         val infoVars:Option[LocalVariableNode] =
-          vars.find(_.name == "$INFO$").find(
+          vars.asScala.find(_.name == "$INFO$").find(
             info => Type.getType(info.desc) == Type.getType(classOf[String])
           )
 
         // val with name "$INFO$" and type String gives info about method
         // group seems to be unused
-        val groupVars = vars.find(_.name == "$group$").find(groupDesc => Type.getType(groupDesc.desc) == Type.getType(classOf[String])) // var names "$group$" gives info about which group method belongs
+        val groupVars = vars.asScala.find(_.name == "$group$").find(groupDesc => Type.getType(groupDesc.desc) == Type.getType(classOf[String])) // var names "$group$" gives info about which group method belongs
 
-        val allVars = vars.filter(x => x.name.startsWith("$") && x.name.endsWith("$")).filter{v =>
+        val allVars = vars.asScala.filter(x => x.name.startsWith("$") && x.name.endsWith("$")).filter{v =>
           Type.getType(v.desc) == Type.getType(classOf[String])
         }.toArray
         
@@ -135,7 +135,7 @@ object Util extends TraitFilePropertyReader {
         }.toMap
 
         val paramVars = paramList.map{p =>
-          vars.find(_.name == "$"+p.paraName+"$").find(info => Type.getType(info.desc) == Type.getType(classOf[String]))
+          vars.asScala.find(_.name == "$"+p.paraName+"$").find(info => Type.getType(info.desc) == Type.getType(classOf[String]))
         }.map(getStr)
         (paramList zip paramVars) foreach{case (p, optInfo) =>
           p.info = optInfo
