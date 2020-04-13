@@ -3,20 +3,13 @@ package org.sh.reflect
 import java.io._
 import java.lang.reflect.Method
 
-import org.objectweb.asm.util.Textifier
-import org.objectweb.asm.util.TraceMethodVisitor
+import org.objectweb.asm.{ClassReader, Type}
+import org.objectweb.asm.tree.{AbstractInsnNode, ClassNode, LocalVariableNode, MethodNode}
+import org.objectweb.asm.util.{Textifier, TraceMethodVisitor}
+import org.sh.reflect.DataStructures._
+import org.sh.utils.file._
 
 import scala.jdk.CollectionConverters._
-import org.sh.reflect.DataStructures._
-import org.objectweb.asm.ClassReader
-import org.objectweb.asm.Type
-import org.objectweb.asm.tree.AbstractInsnNode
-import org.objectweb.asm.tree.ClassNode
-import org.objectweb.asm.tree.LocalVariableNode
-import org.objectweb.asm.tree.MethodNode
-import org.sh.utils.encoding.Base64
-import org.sh.utils.file._
-import org.sh.utils.json.JSONUtil.JsonFormatted
 
 object Util extends TraitFilePropertyReader {
   sealed trait JavaVer
