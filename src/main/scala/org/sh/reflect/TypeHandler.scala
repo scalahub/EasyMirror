@@ -75,7 +75,9 @@ class TypeHandler {
     
     // add more complex types
     addType[String](classOf[String], identity , identity)
-    addType[BigInt](classOf[BigInt], BigInt(_), _.toString)
+    addType[BigInt](classOf[BigInt], BigInt(_),
+      bigInt => s""""${bigInt.toString(10)}""""
+    )
     addType[BigDecimal](classOf[BigDecimal], BigDecimal(_), _.toString)
     addType[java.math.BigInteger](classOf[java.math.BigInteger], new java.math.BigInteger(_), _.toString)
     addType[java.math.BigDecimal](classOf[java.math.BigDecimal], new java.math.BigDecimal(_), _.toString)
