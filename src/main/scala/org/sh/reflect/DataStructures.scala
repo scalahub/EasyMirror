@@ -15,6 +15,11 @@ object DataStructures {
     override def toString = s"$paraName:$paraType"
     var info:Option[String] = None
   }
+
+  trait EasyMirrorSession {
+    def $setSession(sessionSecret:Option[String]): EasyMirrorSession
+  }
+
   case class ScalaMethod(
     name:String, returnType:Type, params:List[Param], parentClassName:String, origName:String, 
     methodInfo:Option[String]=None, groupInfo:Option[String]=None, 

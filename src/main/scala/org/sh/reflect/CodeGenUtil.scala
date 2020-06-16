@@ -66,7 +66,7 @@ Class that generated this code: """+c.getClass.getCanonicalName+"""
 Stacktrace of the call is given below:
 
 """+
-  Thread.currentThread.getStackTrace.drop(1).take(4).map{x =>
+  Thread.currentThread.getStackTrace.drop(1).take(10).map{x =>
     x.getClassName+":"+x.getFileName+":"+x.getLineNumber+"\n"
   }.mkString
 

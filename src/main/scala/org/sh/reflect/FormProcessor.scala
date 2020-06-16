@@ -91,18 +91,22 @@ class FormProcessor(startTag:String, c:AnyRef, th:TypeHandler, optIs:Option[Inpu
   )
   }
   
-  def processForm(formName:String, jsonString:String) = {
+  def processForm(formName:String, jsonString:String)(implicit sessionSecret:Option[String] = None) = {
     val (result, retType) = processFormJavaObjectOutput(formName, jsonString)
     th.typeToString(retType, result)
   }
-  def processFormForSerializableOutput(formName:String, jsonString:String) = serialize(processFormJavaObjectOutput(formName, jsonString)._1)
+  def processFormForSerializableOutput(formName:String, jsonString:String)(implicit sessionSecret:Option[String] = None) = serialize(processFormJavaObjectOutput(formName, jsonString)._1)
 
-  def processFormJavaObjectOutput(formName:String, jsonString:String) = availableMethods.find(_._1.name == actualName(formName)) match {
+  def processFormJavaObjectOutput(formName:String, jsonString:String)(implicit sessionSecret:Option[String] = None) = availableMethods.find(_._1.name == actualName(formName)) match {
     // http://stackoverflow.com/questions/5837698/converting-any-object-to-a-byte-array-in-java
-    case Some((s:ScalaMethod, m:Method)) => 
+    case Some((s:ScalaMethod, m:Method)) =>
+      val objInstance: AnyRef = if (c.isInstanceOf[EasyMirrorSession]) {
+         c.asInstanceOf[EasyMirrorSession].$setSession(sessionSecret)
+      } else c
+
       val (x, y) = (
         m.invoke(
-          c,
+          objInstance,
           th.getParams(
             s.params.map(p => p.paraName),
             m.getParameterTypes, jsonString

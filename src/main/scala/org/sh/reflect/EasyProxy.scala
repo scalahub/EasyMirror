@@ -71,7 +71,7 @@ object EasyProxy {
   // added new field below useJavaSerlializedOutput
   // if this is true, then we will use Java's serialization else we will use type handler
   
-  def getResponse(pid:String, formName:String, reqDataJSON:String, useJavaSerlializedOutput:Boolean = false):String = getProcessor(pid) match {      
+  def getResponse(pid:String, formName:String, reqDataJSON:String, useJavaSerlializedOutput:Boolean = false)(implicit sessionSecret:Option[String] = None):String = getProcessor(pid) match {
     case Some(fp:FormProcessor) => usingDeny(fp, formName) { 
         try {
           if (useJavaSerlializedOutput) {
