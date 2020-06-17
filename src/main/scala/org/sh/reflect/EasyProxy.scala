@@ -53,7 +53,7 @@ object EasyProxy {
   }
   def usingDeny[T](fp:FormProcessor, formName:String)(f: => T) = {
     val mSig = fp.getClassName+"."+formName
-    if (deny.exists(mSig.matches)) throw new Exception("access denied ["+mSig+"]") else f
+    if (deny.exists(mSig.matches)) throw new Exception("Access denied ["+mSig+"]") else f
   }
 
   def getRegEx(wc:String) = wc.replace(".", "\\.").split("\\*", -1).reduceLeft((x, y) => x + ".*"+ (if (y != "") "("+y+")" else ""))
@@ -64,7 +64,7 @@ object EasyProxy {
     case e:ExceptionInInitializerError => getExceptionStack(e.getCause)  // ? 
     case e:Throwable => 
       val cause = e.getCause
-      e.getClass.getSimpleName+":"+
+      // e.getClass.getSimpleName+":"+
       (if (cause == null) e.getMessage else " caused by: "+getExceptionStack(cause))
   }
   
@@ -84,9 +84,9 @@ object EasyProxy {
         catch { 
           case e:Any =>
 
-            println(s"[REFLECT:ERROR] ${e.getClass} at pid:$pid, formName:$formName, reqData:$reqDataJSON. Message [${e.getMessage}]")
+            println(s"[EasyMirror Error] ${e.getClass} at pid:$pid, formName:$formName, reqData:$reqDataJSON. Message [${e.getMessage}]")
 
-            e.printStackTrace
+            // e.printStackTrace
             throw ProxyException(getExceptionStack(e))
         }
       }
@@ -103,7 +103,7 @@ object EasyProxy {
             fp.processFormJavaObjectOutput(formName, reqDataJSON)._1
         } catch { 
           case e:Throwable => 
-            if (debug) e.printStackTrace
+            // if (debug) e.printStackTrace
             throw ProxyException(e.getMessage)
         }
       }

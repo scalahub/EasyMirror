@@ -115,7 +115,7 @@ object Util extends TraitFilePropertyReader {
            } catch {
              case e:Throwable =>
                println(" [Reflect] Error retrieving info")
-               e.printStackTrace()
+               // e.printStackTrace()
                "Error retrieving info"
            }
          }          
@@ -140,7 +140,7 @@ object Util extends TraitFilePropertyReader {
       } catch { 
         case e:Throwable =>
           println (s" [ERROR] Method [${m.name}]. Error message: "+e.getMessage)
-          e.printStackTrace()
+          // e.printStackTrace()
         }
     }
     mList.reverse
