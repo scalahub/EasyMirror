@@ -82,8 +82,8 @@ object EasyProxy {
           }
         } catch {
           case e: Any =>
-            if (e.getCause != null) e.getCause.printStackTrace else e.printStackTrace
-            println(s"[EasyMirror Error] ${e.getClass} at pid:$pid, formName:$formName, reqData:$reqDataJSON. Message [${e.getMessage}]")
+            // if (e.getCause != null) e.getCause.printStackTrace else e.printStackTrace
+            // println(s"[EasyMirror Error] ${e.getClass} at pid:$pid, formName:$formName, reqData:$reqDataJSON. Message [${e.getMessage}]")
             throw ProxyException(getExceptionStack(e))
         }
       }
