@@ -2,11 +2,13 @@ name := "EasyMirror"
 
 lazy val root = (project in file("."))
   .settings(
-  mainClass in (Test, run) := Some("org.sh.reflect.TestDoubleProxyServer")
-)
+    mainClass in (Test, run) := Some("org.sh.reflect.TestDoubleProxyServer")
+  )
 resolvers ++= Seq(
   "SonaType Snapshots s01" at "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 )
+
+Test / publishArtifact := true
 
 libraryDependencies += "io.github.scalahub" %% "scalautils" % "0.1.0-SNAPSHOT"
 

@@ -4,8 +4,8 @@ ThisBuild / organizationHomepage := Some(url("https://github.com/scalahub"))
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
-    url("https://github.com/scalahub/EasyWeb"),
-    "scm:git@github.scalahub/EasyWeb.git"
+    url("https://github.com/scalahub/EasyMirror"),
+    "scm:git@github.scalahub/EasyMirror.git"
   )
 )
 
@@ -18,11 +18,11 @@ ThisBuild / developers := List(
   )
 )
 
-ThisBuild / description := "Library for automating web frontend"
+ThisBuild / description := "Reflection utilities in Scala"
 ThisBuild / licenses := List(
   "The Unlicense" -> new URL("https://unlicense.org/")
 )
-ThisBuild / homepage := Some(url("https://github.com/scalahub/EashWeb"))
+ThisBuild / homepage := Some(url("https://github.com/scalahub/EasyMirror"))
 
 // Remove all additional repository other than Maven Central from POM
 ThisBuild / pomIncludeRepository := { _ => false }
