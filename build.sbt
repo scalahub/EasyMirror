@@ -1,16 +1,17 @@
 name := "EasyMirror"
 
-version := "0.1"
-
-lazy val ScalaUtils = RootProject(uri("https://github.com/scalahub/ScalaUtils.git"))
-//lazy val ScalaUtils = RootProject(uri("../ScalaUtils"))
-
-lazy val root = (project in file(".")).dependsOn(ScalaUtils).settings(
+lazy val root = (project in file("."))
+  .settings(
   mainClass in (Test, run) := Some("org.sh.reflect.TestDoubleProxyServer")
 )
+resolvers ++= Seq(
+  "SonaType Snapshots s01" at "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+)
+
+libraryDependencies += "io.github.scalahub" %% "scalautils" % "0.1.0-SNAPSHOT"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.6.0-M5"
-  
+
 libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.0.0-M1"
 
 libraryDependencies += "commons-codec" % "commons-codec" % "1.12"
