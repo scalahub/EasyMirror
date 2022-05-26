@@ -8,8 +8,6 @@ resolvers ++= Seq(
   "SonaType Snapshots s01" at "https://s01.oss.sonatype.org/content/repositories/snapshots/"
 )
 
-Test / publishArtifact := true
-
 libraryDependencies += "io.github.scalahub" %% "scalautils" % "0.1.0-SNAPSHOT"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.6.0-M5"
