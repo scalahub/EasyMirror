@@ -1,4 +1,4 @@
-name := "Easy_Mirror"
+name := "EasyMirror"
 
 lazy val root = (project in file("."))
   .settings(
