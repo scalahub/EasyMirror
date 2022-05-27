@@ -1,14 +1,15 @@
 name := "EasyMirror"
 
+ThisBuild / version := "1.0"
+
 lazy val root = (project in file("."))
   .settings(
     mainClass in (Test, run) := Some("org.sh.reflect.TestDoubleProxyServer")
   )
-resolvers ++= Seq(
-  "SonaType Snapshots s01" at "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-)
 
-libraryDependencies += "io.github.scalahub" %% "scalautils" % "0.1.0-SNAPSHOT"
+resolvers += "SonaType" at "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+
+libraryDependencies += "io.github.scalahub" %% "scalautils" % "1.0"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.6.0-M5"
 
