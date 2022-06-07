@@ -1,6 +1,6 @@
 name := "EasyMirror"
 
-ThisBuild / version := "1.1"
+ThisBuild / version := "1.2"
 
 lazy val root = (project in file("."))
   .settings(

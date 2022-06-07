@@ -142,7 +142,9 @@ object Util extends TraitFilePropertyReader {
                */
               //val text = insnToString(varNode.start.getPrevious.getPrevious).trim // earlier Java/Scala version
               val text = insnToString(textNode).trim
-              if (text.startsWith("LDC")) text.substring(5).init else "none"
+              val actualText =
+                if (text.startsWith("LDC")) text.substring(5).init else "none"
+              actualText.replace("""\"""", """"""")
             } catch {
               case e: Throwable =>
                 println(" [Reflect] Error retrieving info")
