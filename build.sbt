@@ -1,13 +1,11 @@
 name := "EasyMirror"
 
-ThisBuild / version := "1.0"
+ThisBuild / version := "1.1"
 
 lazy val root = (project in file("."))
   .settings(
-    mainClass in (Test, run) := Some("org.sh.reflect.TestDoubleProxyServer")
+    mainClass in (Test, run) := Some("org.sh.reflect.TestAll")
   )
-
-resolvers += "SonaType" at "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
 
 libraryDependencies += "io.github.scalahub" %% "scalautils" % "1.0"
 
