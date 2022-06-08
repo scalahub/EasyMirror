@@ -1,6 +1,6 @@
 name := "EasyMirror"
 
-ThisBuild / version := "1.2"
+ThisBuild / version := "1.3"
 
 lazy val root = (project in file("."))
   .settings(
@@ -15,7 +15,8 @@ libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.0.0-M1"
 
 libraryDependencies += "commons-codec" % "commons-codec" % "1.12"
 
-libraryDependencies += "cglib" % "cglib" % "3.2.12"
+libraryDependencies += ("cglib" % "cglib" % "3.2.12")
+  .exclude("org.ow2.asm", "asm")
 
 libraryDependencies += "org.json" % "json" % "20140107"
 
